@@ -1,0 +1,8 @@
+Sl. 	Description 		Price
+1.	Khao Soi 		14
+2.	Panang Salmon		17
+3.	Lemongrass Fish	16
+4.	Pla Taud 		14
+5.	Veggie Stir Fry		12
+6.	Nua Gra Teaum	13
+7.	Cashew Chicken	14

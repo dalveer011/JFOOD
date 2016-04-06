@@ -1,0 +1,21 @@
+08
+Thai Soup
+$9.75
+09
+Corn Soup
+$9.75
+10
+Wonton Soup
+$9.50
+11
+Seafood Soup
+$9.75
+12
+Noodle Soup
+$8.75
+13
+Hot & Sour Soup
+$8.75
+14
+Cream of Mushroom Soup
+$9.50

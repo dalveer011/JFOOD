@@ -1,0 +1,5 @@
+Sl. 	Description 		Price
+1.	Mango Salad 		6.5
+2.	Fried Prawn		10
+3.	Fried Calamari		14
+4.	Spring Rolls		6.5

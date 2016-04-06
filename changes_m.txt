@@ -1,0 +1,22 @@
+12.35 pm Sunday Feb 14th!
+
+//Made changes to the exit button. It's going to prompt with a question message!
+//
+int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the application?", 
+                    "Exit Application", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (n == JOptionPane.YES_OPTION)
+                    System.exit(0);
+            else if (n == JOptionPane.NO_OPTION)
+            {}
+
+
+//Created a class CheckLogin!
+- Need to get the information from the file and retrieve the password and use JOptionPane to display the password! 
+
+8.55 pm Monday Feb 15th!
+
+//I made changes to the Login Class and used GridBagLayout instead of Grid Layout so that buttons and text fields are properly placed! 
+
+//Created the other classes for the other restaurants
+//Changed two of the restaurant names and their logos! 
+

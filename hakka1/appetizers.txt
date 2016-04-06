@@ -1,0 +1,21 @@
+01
+Pakoras
+$8.50
+02
+Vetetable Pakoras
+$9.50
+03
+Paneer Pakoras
+$10.50
+04
+Lollipop Chicken
+$8.50
+05
+Fried Spring Roll
+$6.0
+06
+Fried Wontons
+$6.95
+07
+Spicy Chicken Wings
+$8.50
