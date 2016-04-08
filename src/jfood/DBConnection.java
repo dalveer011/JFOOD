@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  * @author Mazhar
  */
 public class DBConnection {
-    private static String userName = "n01131759";
+    private static String userName = "n00491368";
     private static String password = "oracle";
     private static String driver = "oracle.jdbc.driver.OracleDriver";
     private static String url = "jdbc:oracle:thin:@dilbert.humber.ca:1521:grok";
