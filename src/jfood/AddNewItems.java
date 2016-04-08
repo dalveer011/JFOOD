@@ -305,7 +305,7 @@ public class AddNewItems extends RestaurantMenuBar{
         
         txtRestId = new JTextField();
         txtRestId.setEditable(false);
-       txtRestId.setText(id);
+        txtRestId.setText(id);
         
         
         

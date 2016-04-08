@@ -7,15 +7,8 @@ package jfood;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -30,8 +23,11 @@ public class AddBalance extends MenuCustomer {
     private JPanel panelCenterBottom;
     private JPanel panelCenter;
     private JPanel panelCenterTop;
-    private DataInputStream dIn;
     
+    private DBConnection db;
+    private ResultSet rs;
+    private String query = "SELECT LOGINID, CURRENTBAL, CARDINFO, EXPIRY, CCV FROM CUSTOMER_WALLET_JFOOD";
+
     
     public AddBalance (final String id){
     this.id = id;
@@ -151,29 +147,24 @@ public class AddBalance extends MenuCustomer {
         txtCurBalance.setPreferredSize(new Dimension (250, 30));
         txtCurBalance.setEditable(false);
         
+        db = new DBConnection();
+        rs = db.getInfo(query);
         
         try {
-            //To get Current Balance
-            String cId = txtId.getText();
-            dIn = new DataInputStream(new FileInputStream("balance.txt"));
-            while (dIn.available()>0)
-            {
-                if (dIn.readUTF().equals(cId))
-                {
-                    txtCurBalance.setText(dIn.readUTF());
-                    txtCard.setText(dIn.readUTF());
-                    txtExpiry.setText(dIn.readUTF());
-                    txtCCV.setText(dIn.readUTF());
-                    break;
+            while (rs.next()){
+                if (id.equals(rs.getString(1))){
+                    txtCurBalance.setText(rs.getString(2));
+                    txtCard.setText(rs.getString(3));
+                    txtExpiry.setText(rs.getString(4));
+                    txtCCV.setText(rs.getString(5));
                 }
             }
-            dIn.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Add Balance", JOptionPane.ERROR_MESSAGE);
         }
-       
+        
+        db.closeConnection();
+        
         //Creating the buttons
         btnAdd = new JButton ("Add");
         btnExit = new JButton ("Exit");
@@ -182,66 +173,30 @@ public class AddBalance extends MenuCustomer {
         btnAdd.addActionListener
         (
             new ActionListener (){
-            private DataOutputStream dOut;
 
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                try {
+                db = new DBConnection();
+                
                 String customerId = txtId.getText();
                 String balance = txtCurBalance.getText();
-                String addAmount = txtAddAmount.getText();
+                String amt = txtAddAmount.getText();
                 String cardInfo = txtCard.getText();
                 String expiry = txtExpiry.getText();
-                String ccv = txtCCV.getText(); 
+                String ccv = txtCCV.getText();
                 
-                File n = new File ("balance.txt");
-                File bal = new File ("balance.txt");
-                File temp = new File ("tempBalance.txt");
+                double b = Double.parseDouble(balance);
+                double a = Double.parseDouble(amt);
+                double c = b + a;
+                double addAmt = c;
                 
                 
-                dIn = new DataInputStream( new FileInputStream(bal));
-                dOut = new DataOutputStream(new FileOutputStream(temp, true));
                 
-                while(dIn.available()>0)
-                {
-                    String cId = dIn.readUTF();
-                    
-                    if (cId.equals(customerId))
-                    {
-                        for (int i = 1; i < 5; i++)
-                        {
-                            dIn.readUTF();
-                        }
-                        
-                        dOut.writeUTF(customerId);
-                        double amt = Double.parseDouble(balance) + Double.parseDouble((addAmount));
-                        dOut.writeUTF(Double.toString(amt));
-                        dOut.writeUTF(cardInfo);
-                        dOut.writeUTF(expiry);
-                        dOut.writeUTF(ccv);
-                    }
-                    else
-                    {
-                        dOut.writeUTF(cId);
-                        for (int i = 1; i < 5; i++)
-                        {
-                            dOut.writeUTF(dIn.readUTF());
-                        }
-                    }
-                }
-                dIn.close();
-                dOut.close();
+                db.UpdateCreditCardBalance(customerId, addAmt, cardInfo, expiry, ccv);
                 
-                bal.delete();
-                temp.renameTo(n);
-                
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 JOptionPane.showMessageDialog(null,"Updated","Customer Wallet Updated",JOptionPane.INFORMATION_MESSAGE);
+                db.closeConnection();
                 ThankUForAddingBalance tu = new ThankUForAddingBalance(id);
                 AddBalance.this.dispose();
             }
@@ -255,8 +210,12 @@ public class AddBalance extends MenuCustomer {
         public void actionPerformed(ActionEvent e) {
             int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the application?", 
                     "Exit Application", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (n == JOptionPane.YES_OPTION)
+            if (n == JOptionPane.YES_OPTION){
+                    if (db != null){
+                        db.closeConnection();
+                    }
                     System.exit(0);
+            }
             else if (n == JOptionPane.NO_OPTION)
             {}
         }

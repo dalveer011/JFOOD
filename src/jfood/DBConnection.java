@@ -10,15 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 /**
  *
  * @author Mazhar
  */
 public class DBConnection {
-    private static String userName = "n01131759";
+    private static String userName = "n00491368";
     private static String password = "oracle";
     private static String driver = "oracle.jdbc.driver.OracleDriver";
     private static String url = "jdbc:oracle:thin:@dilbert.humber.ca:1521:grok";
@@ -302,6 +300,30 @@ public class DBConnection {
      stmt.addBatch();
      stmt.executeBatch();
      conn.commit();
+    }
+    
+    public void UpdateCreditCardBalance (String loginId, double curBal, String card, String expiry, 
+            String ccv)
+    {
+        String updateQuery = "Update CUSTOMER_WALLET_JFOOD "
+                + "SET CURRENTBAL = ?, "
+                + "CARDINFO = ?, EXPIRY = ?, CCV = ?"
+                + "WHERE LOGINID = ?";
+        
+        try {
+            conn.setAutoCommit(false);
+            stmt = conn.prepareStatement(updateQuery);
+            stmt.setDouble(1, curBal);
+            stmt.setString(2, card);
+            stmt.setString(3, expiry);
+            stmt.setString(4, ccv);
+            stmt.setString(5, loginId);
+            stmt.executeQuery();
+            conn.commit();
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }

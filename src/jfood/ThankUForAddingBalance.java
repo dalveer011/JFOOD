@@ -3,12 +3,8 @@ package jfood;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -23,6 +19,11 @@ public class ThankUForAddingBalance extends MenuCustomer {
     private JPanel panelCenterTop;
     private JPanel panelCenterBottom;
     private JPanel panelCenterMiddle;
+    
+    private DBConnection db;
+    private ResultSet rs;
+    
+    private String queryWallet = "SELECT LOGINID, CURRENTBAL FROM CUSTOMER_WALLET_JFOOD";
     
     
     public ThankUForAddingBalance (String id){
@@ -49,26 +50,21 @@ public class ThankUForAddingBalance extends MenuCustomer {
         txtCurBalance = new JTextField();
         txtCurBalance.setPreferredSize(new Dimension (180, 30));
         txtCurBalance.setEditable(false);
-         DataInputStream dis = null;
-                try {
-                    dis = new DataInputStream(new FileInputStream("balance.txt"));
-                    while(dis.available() > 0) {
-                        String cid = dis.readUTF();
-                    if(id.equals(cid)) {
-                    txtCurBalance.setText(dis.readUTF());
-                    break;
-                    }else {
-                    for(int i =0;i<4;i++) {
-                    dis.readUTF();
-                    }
-                    }
-                    }
-                    dis.close();
-                   } catch (FileNotFoundException ex) {
-                    Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-            Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        
+        
+        db = new DBConnection();
+        rs = db.getInfo(queryWallet);
+        
+        try {
+            while (rs.next()){
+                if (id.equals(rs.getString(1))){
+                    txtCurBalance.setText(rs.getString(2));
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Thank You for adding Balance", JOptionPane.ERROR_MESSAGE);
+        }
+        
         btnContinue = new JButton ("Continue");
         btnExit = new JButton ("Exit");
         //ActionListener for exit button!
@@ -78,7 +74,16 @@ public class ThankUForAddingBalance extends MenuCustomer {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the application?", 
+                    "Exit Application", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (n == JOptionPane.YES_OPTION){
+                if (db != null){
+                    db.closeConnection();
+                }
+                    System.exit(0);
+            }
+            else if (n == JOptionPane.NO_OPTION)
+            {}
             }
         });
         
@@ -129,13 +134,10 @@ public class ThankUForAddingBalance extends MenuCustomer {
         g.gridwidth=1;
         panelCenterMiddle.add(txtCurBalance, g);
         
-        
-        
         panelCenter = new JPanel(new BorderLayout());
         panelCenter.add(panelCenterTop, BorderLayout.NORTH);
         panelCenter.add(panelCenterMiddle, BorderLayout.CENTER);
         panelCenter.add(panelCenterBottom, BorderLayout.SOUTH);
         
     }
-            
 }
