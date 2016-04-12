@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 public class WelcomeScreen extends JFrame {
 
     private JPanel chooseBtn,contentArea,addInCenter,addInCenterTop,addInCenterBottom,logo;
-    private JButton login,register,exit;
+    private JButton login,registerRestaurant,exit,registerCustomer;
     private JLabel center,lblLogo,lblicon1,lblicon2,lblicon3,lblProcess;
     
     private JPanel panelInCenterBottom1, panelInCenterBottom2;
@@ -67,13 +67,24 @@ public class WelcomeScreen extends JFrame {
             WelcomeScreen.this.dispose();
         }
     });
-    register = new JButton("Register");
+    registerCustomer = new JButton("Customer Registration");
+    registerRestaurant = new JButton("Restaurant  Registration");
+    
     //Adding action listener to register button
-    register.addActionListener(new ActionListener() {
+    registerCustomer.addActionListener(new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            new ConfirmRole();
+            new CustomerRegistration();
+            //RegistrationForm r = new RegistrationForm();
+            WelcomeScreen.this.dispose();
+        }
+    });
+    registerRestaurant.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new RestaurantRegistration();
             //RegistrationForm r = new RegistrationForm();
             WelcomeScreen.this.dispose();
         }
@@ -83,7 +94,8 @@ public class WelcomeScreen extends JFrame {
     chooseBtn = new JPanel();
     chooseBtn.setLayout(new FlowLayout());
     chooseBtn.add(login);
-    chooseBtn.add(register);
+    chooseBtn.add(registerCustomer);
+     chooseBtn.add(registerRestaurant);
     chooseBtn.add(exit);
     
     logo = new JPanel();

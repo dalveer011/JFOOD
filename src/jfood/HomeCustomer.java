@@ -45,7 +45,12 @@ public class HomeCustomer extends MenuCustomer {
 
             @Override
             public void itemStateChanged(ItemEvent e) {
-                try {       
+                 if(cmbState.getSelectedIndex() == 0){
+               cmbCity.removeAllItems();
+               cmbCity.addItem("Select city");
+               }
+                else{ 
+                        try {       
                     conn = new DBConnection();  
                     rs = conn.getInfo("select city from jfood_cities where state = '"+cmbState.getSelectedItem().toString()+"'");
                     cmbCity.removeAllItems();   
@@ -56,7 +61,8 @@ public class HomeCustomer extends MenuCustomer {
                     cmbCity.setSelectedIndex(0);
                             }  catch (SQLException ex) {
                     System.out.println("Error in item listener of cmState "+ex.getMessage());
-                }
+                        }  
+                        }
             }
         });
  

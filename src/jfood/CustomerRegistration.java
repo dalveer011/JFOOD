@@ -8,6 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.border.TitledBorder;
 /**
  *
@@ -27,11 +31,12 @@ public class CustomerRegistration extends JFrame {
     public  JTextField txtId, txtFirstName, txtLastName, txtCity, 
             txtStreetName, txtPostalCode, txtEmail, txtPhone, txtAns1, txtAns2;
     private JPasswordField txtPassword; //used JPasswordField instead of JTextField
-    public  JComboBox comboBoxRole, comboBoxSq1, comboBoxSq2, comboBoxProvince;  
+    public  JComboBox comboBoxRole, comboBoxSq1, comboBoxSq2, comboBoxProvince,cmbCity;  
     private JButton btnRegister,btnHome;   
     private JPanel panelRegistration, panelHeading, panelButton,center;
-    
+    private ResultSet rs;
     private DBConnection db = null;
+    private DBConnection conn = null;
     private JTextField txtRole;
     
     
@@ -46,6 +51,29 @@ public class CustomerRegistration extends JFrame {
         this.add(panelRegistration, BorderLayout.CENTER);
         this.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE); //Terminate the application on pressing close button
         this.setVisible(true);
+        comboBoxProvince.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               conn = new DBConnection();  
+                if(comboBoxProvince.getSelectedIndex() == 0){
+               cmbCity.removeAllItems();
+               cmbCity.addItem("Select city");
+               }else{
+                try {       
+                    rs = conn.getInfo("select city from jfood_cities where state = '"+comboBoxProvince.getSelectedItem().toString()+"'");
+                    cmbCity.removeAllItems();   
+                    //cmbCity.addItem("select city");
+                    while(rs.next()){
+                        cmbCity.addItem(rs.getString(1));
+                    }
+                    cmbCity.setSelectedIndex(0);
+                            }  catch (SQLException ex) {
+                    System.out.println("Error in item listener of cmState "+ex.getMessage());
+                }
+            }
+            }
+        });
     }
     
     //initComponents method
@@ -99,7 +127,8 @@ public class CustomerRegistration extends JFrame {
         txtAns2 = new JTextField ();
         txtRole = new JTextField ("Customer");
         txtRole.setEditable(false);
-        
+        comboBoxProvince = new JComboBox();
+        cmbCity = new JComboBox();
         
         String [] sq1 = {"What is your mothers maiden name?", "Which city you were born in?", 
         "What is your favourite holiday destination?"};
@@ -109,8 +138,20 @@ public class CustomerRegistration extends JFrame {
         "Who is your favourite school teacher?"};
         comboBoxSq2 = new JComboBox(sq2);
         
-        String [] province = {"Ontario", "British Columbia", "Quebec", "Prince Edward Islands", "New Brunswick" , "Manitoba" , "Nova Scotia", "Alberta", "Saskatchewan", "Newfoundland and Labrador"};
-        comboBoxProvince = new JComboBox(province);
+        try {
+            conn =new DBConnection();
+              System.out.println("hello");
+              rs = conn.getInfo("select distinct state from jfood_cities");
+              System.out.println("ends");
+              comboBoxProvince.addItem("Select State");   
+              cmbCity.addItem("Select City");   
+            while(rs.next()){
+            comboBoxProvince.addItem(rs.getString(1));
+            }
+            comboBoxProvince.setSelectedIndex(0);  
+        } catch (SQLException ex) {
+            System.out.println("Error in customerRegistration "+ex.getMessage());
+        }
                 
         //Register Button with actionlistener to Login form!
         
@@ -126,7 +167,7 @@ public class CustomerRegistration extends JFrame {
                 String fName = txtFirstName.getText();
                 String lName = txtLastName.getText();
                 String streetAdd = txtStreetName.getText();
-                String city = txtCity.getText();
+                String city = cmbCity.getSelectedItem().toString();
                 String province = (String)comboBoxProvince.getSelectedItem();
                 String postalCode = txtPostalCode.getText();
                 String email = txtEmail.getText();
@@ -190,7 +231,7 @@ public class CustomerRegistration extends JFrame {
         panelRegistration.add(lblStreetName);
         panelRegistration.add(txtStreetName);
         panelRegistration.add(lblCity);
-        panelRegistration.add(txtCity);
+        panelRegistration.add(cmbCity);
         panelRegistration.add(lblProvince);
         panelRegistration.add(comboBoxProvince);
         panelRegistration.add(lblPostalCode);
