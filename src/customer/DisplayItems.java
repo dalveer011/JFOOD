@@ -7,12 +7,15 @@ import customer.HomeCustomer;
 import customer.Customer_UpdateDetails;
 import customer.Customer;
 import customer.CheckOut;
+import database.DBConnection;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -146,29 +149,33 @@ public class DisplayItems extends MenuCustomer{
             public void itemStateChanged(ItemEvent e) {
                 panelCenterInsideMiddle.removeAll();
                 String category = (String) menuCategory.getSelectedItem();
-                try {
-                    DataInputStream dis  = new DataInputStream(new FileInputStream("addItems.txt"));
+                
                     int count = 0;
                     recordList = new ArrayList();
-                    while(dis.available() > 0 )
-                    {
-                        String id = dis.readUTF();
-                        String itemNo = dis.readUTF();
-                        String cat = dis.readUTF();
-                        System.out.println(""+id+""+itemNo);
+                    DBConnection db = new DBConnection();
+                    ResultSet rs = db.getInfo("Select itemnum, item_description, category, price from menu_items_jfood where restaurantid = '" + restId + "'");
+                    try{
                         
-                    if(id.equals(restId)&category.equals(cat)) {
+                    while (rs.next()){
+                        
+                        String itemNo = rs.getString(1);
+                        String item_desc = rs.getString (2);
+                        String cat = rs.getString(3);
+                        double price = rs.getDouble(4);
+                        
+                    if(category.equals(cat)) {
                             JTextField  a = new JTextField();
                             a.setText(itemNo);
                             a.setEditable(false);
                             JTextField  b = new JTextField();
-                            b.setText(dis.readUTF());
+                            b.setText(item_desc);
                             b.setEditable(false);
                             JTextField  c = new JTextField();
-                            c.setText(dis.readUTF());
+                            c.setText(Double.toString(price));
                             c.setEditable(false);
-                            JSpinner quantity = new JSpinner(new SpinnerNumberModel(0,0,25,1));
+                            JSpinner quantity = new JSpinner(new SpinnerNumberModel(1,1,25,1));
                             JCheckBox  d = new JCheckBox();
+                            
                             AddtoCartRecord record = new AddtoCartRecord();
                             record.setTxtItemNo(a);
                             record.setTxtItemdesc(b);
@@ -182,21 +189,16 @@ public class DisplayItems extends MenuCustomer{
                                         panelCenterInsideMiddle.add(quantity);
                                         panelCenterInsideMiddle.add(d);
                                         panelCenterInsideMiddle.validate();
-                              count++;                    
-                    }else
-                        {
-                                dis.readUTF();
-                                dis.readUTF();
-                        }
+                              count++;
                     }
+                    }
+                    
                     if(count == 0) {
                     JOptionPane.showMessageDialog(null,"No item in this category for choosen Restaurant", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
                     }
-                } catch (FileNotFoundException ex) {
-                    System.out.println("Error in DisplayItems.java");
-                } catch (IOException ex) {
-                    System.out.println("Error in DisplayItems.java");
-                }
+                } catch (SQLException ex) {
+                    System.out.println("Error in DisplayItems.java" + ex.getMessage());
+                } 
             }
         });
         
@@ -214,11 +216,7 @@ public class DisplayItems extends MenuCustomer{
                     for(Object z : recordList) {
                     AddtoCartRecord x = (AddtoCartRecord)z;
                     if(x.isChecked()) {
-                    dos.writeUTF(x.getTxtItemNo().getText());
-                    dos.writeUTF(x.getTxtItemdesc().getText());
-                    dos.writeUTF(x.getTxtItemPrice().getText());
-                    dos.writeInt(x.getQuantity());
-                    Customer.completeShoppingList.add(x);
+                        Customer.completeShoppingList.add(x);
                     }
                     } 
                     dos.close();

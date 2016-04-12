@@ -191,7 +191,7 @@ public class CustomerRegistration extends JFrame {
                         ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty()){
                     
                     JOptionPane.showMessageDialog(null, "Fields Marked as * can not be left Blank","Can not be Empty", JOptionPane.ERROR_MESSAGE);
-<<<<<<< HEAD
+
                 }else
                 {
                     try {
@@ -231,22 +231,6 @@ public class CustomerRegistration extends JFrame {
                     } catch (IOException ex) {
                         Logger.getLogger(RestaurantRegistration.class.getName()).log(Level.SEVERE, null, ex);
                     }
-=======
-                }else{
-                    
-                        db = new DBConnection();
-                        db.addCustomerInfo (loginId, pass, role, fName, lName, streetAdd, city, province, postalCode, email, phone);
-                        db.addSecurityQuestions(loginId, pass, role, secQues1, ans1, secQues2, ans2);
-                        //db.addCreditCardInfo(loginId, "0", "0", "0", "0");
-                                          
-                    JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
-                    
-                    //Closing connection
-                    db.closeConnection();
-                    
-                    LoginForm l1 = new LoginForm();
-                    CustomerRegistration.this.dispose();
->>>>>>> origin/master
                 }
             }
         });

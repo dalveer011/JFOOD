@@ -129,39 +129,39 @@ public class DBConnection {
     }
     
     
-    public void addRestaurantInfo (String restaurantId, String pass, String role, String name, 
-            String streetAdd, String city,
-            String province, String postalCode, 
-            String email, String phone)
-    {
-<<<<<<< HEAD
-        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (RESTAURANTID, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
-=======
-        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (restaurantId, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
->>>>>>> origin/master
-                " VALUES (?,?,?,?,?,?,?,?,?,?)";
-                
-        try {
-            conn.setAutoCommit(false);
-            stmt = conn.prepareStatement(addRegistrationInfo);
-            stmt.setString(1, restaurantId);
-            stmt.setString(2, pass);
-            stmt.setString(3, role);
-            stmt.setString(4, name);
-            stmt.setString(5, streetAdd);
-            stmt.setString(6, city);
-            stmt.setString(7, province);
-            stmt.setString(8, postalCode);
-            stmt.setString(9, email);
-            stmt.setString(10, phone);
-            
-            stmt.executeQuery();
-            conn.commit();
-            
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Registration Table", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
+//    public void addRestaurantInfo (String restaurantId, String pass, String role, String name, 
+//            String streetAdd, String city,
+//            String province, String postalCode, 
+//            String email, String phone)
+//    {
+//<<<<<<< HEAD
+//        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (RESTAURANTID, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
+//=======
+//        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (restaurantId, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
+//>>>>>>> origin/master
+//                " VALUES (?,?,?,?,?,?,?,?,?,?)";
+//                
+//        try {
+//            conn.setAutoCommit(false);
+//            stmt = conn.prepareStatement(addRegistrationInfo);
+//            stmt.setString(1, restaurantId);
+//            stmt.setString(2, pass);
+//            stmt.setString(3, role);
+//            stmt.setString(4, name);
+//            stmt.setString(5, streetAdd);
+//            stmt.setString(6, city);
+//            stmt.setString(7, province);
+//            stmt.setString(8, postalCode);
+//            stmt.setString(9, email);
+//            stmt.setString(10, phone);
+//            
+//            stmt.executeQuery();
+//            conn.commit();
+//            
+//        } catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Registration Table", JOptionPane.INFORMATION_MESSAGE);
+//        }
+//    }
     
     public void addCustomerInfo (String loginId, String pass, String role, String fName, 
             String lName, String streetAdd, String city,
@@ -325,7 +325,8 @@ public class DBConnection {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception", JOptionPane.ERROR_MESSAGE);
         }
     }
-public void addOrder(int orderNum,String loginId,String restaurantId,ArrayList itemNumbers){
+
+    public void addOrder(int orderNum,String loginId,String restaurantId,ArrayList itemNumbers){
         try {
             System.out.println(orderNum+loginId+restaurantId);
             String query = "insert into orders_jfood values(?,?,?,?)";
@@ -336,13 +337,21 @@ public void addOrder(int orderNum,String loginId,String restaurantId,ArrayList i
             stmt.setInt(4,0);
             stmt.executeUpdate();
             String query2 = "insert into order_items_jfood values(?,?,?,?)";
+            for(Object a :  itemNumbers){ 
+                AddtoCartRecord item = (AddtoCartRecord)a;      
+                 System.out.println(orderNum);
+                 System.out.println(item.getTxtItemNo().getText());
+                 System.out.println(Integer.toString(item.getQuantity()));
+                 System.out.println(item.getTxtItemPrice().getText());
+                 //stmt.executeUpdate();
+            }
             stmt = conn.prepareStatement(query2);
             for(Object a :  itemNumbers){ 
                 AddtoCartRecord item = (AddtoCartRecord)a;      
                  stmt.setInt(1, orderNum);
                  stmt.setString(2, item.getTxtItemNo().getText());
-                 stmt.setString(3, Integer.toString(item.getQuantity()));
-                 stmt.setString(4, item.getTxtItemPrice().getText());
+                 stmt.setInt(3, item.getQuantity());
+                 stmt.setDouble(4, Double.parseDouble(item.getTxtItemPrice().getText()));
                  stmt.executeUpdate();
             }
            JOptionPane.showMessageDialog(null,"Order Placed Successfully","Order Placed",JOptionPane.INFORMATION_MESSAGE);
