@@ -15,6 +15,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.border.TitledBorder;
 import database.DBConnection;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.WelcomeScreen;
 /**
@@ -185,20 +191,45 @@ public class CustomerRegistration extends JFrame {
                         ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty()){
                     
                     JOptionPane.showMessageDialog(null, "Fields Marked as * can not be left Blank","Can not be Empty", JOptionPane.ERROR_MESSAGE);
-                }else{
-                    
-                        db = new DBConnection();
-                        db.addCustomerInfo (loginId, pass, role, fName, lName, streetAdd, city, province, postalCode, email, phone);
-                        db.addSecurityQuestions(loginId, pass, role, secQues1, ans1, secQues2, ans2);
-                        db.addCreditCardInfo(loginId, "0", "0", "0", "0");
-                                          
-                    JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
-                    
-                    //Closing connection
-                    db.closeConnection();
-                    
-                    LoginForm l1 = new LoginForm();
-                    CustomerRegistration.this.dispose();
+                }else
+                {
+                    try {
+                        Socket socketCusRegistration = new Socket("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketCusRegistration.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream(socketCusRegistration.getOutputStream());
+                        
+                        dataToServer.writeInt(2); //Process Id for Customer Registration!
+                        dataToServer.writeUTF(loginId);
+                        dataToServer.writeUTF(pass);
+                        dataToServer.writeUTF(role);
+                        dataToServer.writeUTF(fName);
+                        dataToServer.writeUTF(lName);
+                        dataToServer.writeUTF(streetAdd);
+                        dataToServer.writeUTF(city);
+                        dataToServer.writeUTF(province);
+                        dataToServer.writeUTF(postalCode);
+                        dataToServer.writeUTF(email);
+                        dataToServer.writeUTF(phone);
+                        dataToServer.writeUTF(secQues1);
+                        dataToServer.writeUTF(ans1);
+                        dataToServer.writeUTF(secQues2);
+                        dataToServer.writeUTF(ans2);
+                        
+                        boolean checkRegistration = dataFromServer.readBoolean();
+                        
+                        if (checkRegistration){
+                            JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
+                            LoginForm l1 = new LoginForm();
+                            CustomerRegistration.this.dispose();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "LoginId already exits. Please use a different Login name.", "Sign Up Unsuccessful", JOptionPane.ERROR_MESSAGE);   
+                            txtId.setText("");
+                            txtId.grabFocus();
+                        }
+                        
+                    } catch (IOException ex) {
+                        Logger.getLogger(RestaurantRegistration.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -234,10 +265,10 @@ public class CustomerRegistration extends JFrame {
         panelRegistration.add(txtLastName);
         panelRegistration.add(lblStreetName);
         panelRegistration.add(txtStreetName);
-        panelRegistration.add(lblCity);
-        panelRegistration.add(cmbCity);
         panelRegistration.add(lblProvince);
         panelRegistration.add(comboBoxProvince);
+        panelRegistration.add(lblCity);
+        panelRegistration.add(cmbCity);
         panelRegistration.add(lblPostalCode);
         panelRegistration.add(txtPostalCode);
         panelRegistration.add(lblEmail);

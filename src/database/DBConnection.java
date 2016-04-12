@@ -129,18 +129,18 @@ public class DBConnection {
     }
     
     
-    public void addRestaurantInfo (String loginId, String pass, String role, String name, 
+    public void addRestaurantInfo (String restaurantId, String pass, String role, String name, 
             String streetAdd, String city,
             String province, String postalCode, 
             String email, String phone)
     {
-        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (LOGINID, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
+        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (RESTAURANTID, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
                 
         try {
             conn.setAutoCommit(false);
             stmt = conn.prepareStatement(addRegistrationInfo);
-            stmt.setString(1, loginId);
+            stmt.setString(1, restaurantId);
             stmt.setString(2, pass);
             stmt.setString(3, role);
             stmt.setString(4, name);

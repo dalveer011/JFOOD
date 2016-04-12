@@ -18,6 +18,10 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import database.DBConnection;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import jfood.HeaderFooter;
 import jfood.WelcomeScreen;
 /**
@@ -173,7 +177,7 @@ public class RestaurantRegistration extends JFrame {
                 String role = txtRole.getText();
                 String name = txtName.getText();
                 String streetAdd = txtStreetName.getText();
-                 String city = cmbCity.getSelectedItem().toString();
+                String city = cmbCity.getSelectedItem().toString();
                 String province = (String)comboBoxProvince.getSelectedItem();
                 String postalCode = txtPostalCode.getText();
                 String email = txtEmail.getText();
@@ -184,22 +188,48 @@ public class RestaurantRegistration extends JFrame {
                 String ans2 = txtAns2.getText();
                 
                 if(loginId.trim().isEmpty() || pass.trim().isEmpty()||name.trim().isEmpty()||streetAdd.trim().isEmpty()
-                        ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty()){
-                    
+                        ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty())
+                { 
                     JOptionPane.showMessageDialog(null, "Fields Marked as * can not be left Blank","Can not be Empty", JOptionPane.ERROR_MESSAGE);
-                }else{
-                    
-                        db = new DBConnection();
-                        db.addRestaurantInfo (loginId, pass, role, name, streetAdd, city, province, postalCode, email, phone);
-                        db.addSecurityQuestions (loginId, pass, role, secQues1, ans1, secQues2, ans2);
-                                          
-                    JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
-                    
-                    //Closing connection
-                    db.closeConnection();
-                    
-                    LoginForm l1 = new LoginForm();
-                    RestaurantRegistration.this.dispose();
+                }
+                else
+                {   
+                    try {
+                        Socket socketRstRegistration = new Socket("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketRstRegistration.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream(socketRstRegistration.getOutputStream());
+                        
+                        dataToServer.writeInt(1); //Process Id for Restaurant Registration
+                        dataToServer.writeUTF(loginId);
+                        dataToServer.writeUTF(pass);
+                        dataToServer.writeUTF(role);
+                        dataToServer.writeUTF(name);
+                        dataToServer.writeUTF(streetAdd);
+                        dataToServer.writeUTF(city);
+                        dataToServer.writeUTF(province);
+                        dataToServer.writeUTF(postalCode);
+                        dataToServer.writeUTF(email);
+                        dataToServer.writeUTF(phone);
+                        dataToServer.writeUTF(secQues1);
+                        dataToServer.writeUTF(ans1);
+                        dataToServer.writeUTF(secQues2);
+                        dataToServer.writeUTF(ans2);
+                        
+                        boolean checkRegistration = dataFromServer.readBoolean();
+                        
+                        if (checkRegistration){
+                            JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
+                            LoginForm l1 = new LoginForm();
+                            RestaurantRegistration.this.dispose();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "LoginId already exits. Please use a different Login name.", "Sign Up Unsuccessful", JOptionPane.ERROR_MESSAGE);   
+                            txtId.setText("");
+                            txtId.grabFocus();
+                        }
+                        
+                    } catch (IOException ex) {
+                        Logger.getLogger(RestaurantRegistration.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -221,7 +251,7 @@ public class RestaurantRegistration extends JFrame {
         
         panelRegistration = new JPanel ();
         panelRegistration.setBorder(leftBorder);
-        panelRegistration.setLayout(new GridLayout (16,2));
+        panelRegistration.setLayout(new GridLayout (15,2));
         
         panelRegistration.add(lblId);
         panelRegistration.add(txtId);
@@ -233,10 +263,10 @@ public class RestaurantRegistration extends JFrame {
         panelRegistration.add(txtName);
         panelRegistration.add(lblStreetName);
         panelRegistration.add(txtStreetName);
-        panelRegistration.add(lblCity);
-        panelRegistration.add(cmbCity);
         panelRegistration.add(lblProvince);
         panelRegistration.add(comboBoxProvince);
+        panelRegistration.add(lblCity);
+        panelRegistration.add(cmbCity);
         panelRegistration.add(lblPostalCode);
         panelRegistration.add(txtPostalCode);
         panelRegistration.add(lblEmail);

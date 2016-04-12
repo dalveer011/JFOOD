@@ -27,6 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.TitledBorder;
 import database.DBConnection;
+import java.io.DataOutputStream;
+import java.net.Socket;
 import jfood.ForgotPassword;
 import jfood.HeaderFooter;
 import jfood.WelcomeScreen;
@@ -102,33 +104,39 @@ public class LoginForm extends JFrame{
 
                 }else
                 {
-                    String role = (String)comboBoxRole.getSelectedItem();
-                        if (role == "Customer"){
-                            rs = db.getInfo(queryCustomer);
-                        }else if (role == "Restaurant Owner"){
-                            rs = db.getInfo(queryRestaurantOwner);
-                        }
-                    int count = 0;
                     try {
-                        while(rs.next())
-                        {
-                            if (txtEnterId.getText().equals(rs.getString(1))){
-                                count++;
-                            }
-                        }   
-                            if (count == 0){
-                                JOptionPane.showMessageDialog(null, "Id'doesn't exist", "ID Not in List", JOptionPane.INFORMATION_MESSAGE);
-                                txtEnterId.setText("");
-                                txtEnterId.grabFocus();
+                        Socket socketfgPass = new Socket("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketfgPass.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream(socketfgPass.getOutputStream());
+                       
+                        String role = (String)comboBoxRole.getSelectedItem();
+                        if (role == "Customer"){
+                            dataToServer.writeInt(5); //Forgot password for Customers
+                            dataToServer.writeUTF(txtEnterId.getText());
+                            
+                            boolean checkfgPass_cus = dataFromServer.readBoolean();
+                            if (checkfgPass_cus){
+                                new ForgotPassword(txtEnterId.getText());
+                                LoginForm.this.dispose();
+                            }else{
+                                JOptionPane.showMessageDialog(null, "CustomerId doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
                             }
                             
-                            if (count > 0){
+                        }else if (role == "Restaurant Owner")
+                        {
+                            dataToServer.writeInt(6); //Forgot password for Restaurant Owners
+                            dataToServer.writeUTF(txtEnterId.getText());
+                            
+                            boolean checkfgPass_Rst = dataFromServer.readBoolean();
+                            if (checkfgPass_Rst){
                                 new ForgotPassword(txtEnterId.getText());
-                                db.closeConnection();
                                 LoginForm.this.dispose();
-                            }
+                            }else{
+                                JOptionPane.showMessageDialog(null, "RestaurantId doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
+                            }    
+                        }
                         
-                    } catch (SQLException ex) {
+                    } catch (IOException ex) {
                         Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
