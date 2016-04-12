@@ -52,63 +52,6 @@ public class AddNewItems extends RestaurantMenuBar{
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                    try {
-//                   //-----------To check if item already exists--------//
-//                        DataInputStream dis = new DataInputStream(new FileInputStream("addItems.txt"));
-//                    boolean check = true;
-//                    String enteredItemNum = txtItemNum.getText();
-//                    while(dis.available() > 0) {
-//                    String restId = dis.readUTF();
-//                    String alreadyThere = dis.readUTF();
-//                    if((restId.toUpperCase().equals(id.toUpperCase())) & (enteredItemNum.toUpperCase().equals(alreadyThere.toUpperCase()))  ){
-//                     JOptionPane.showMessageDialog(null, "This item Id already Exits. Please provide another Id","Id already exists", JOptionPane.ERROR_MESSAGE);
-//                    check = false;
-//                    txtItemNum.setText("");
-//                    }
-//                    for(int i = 1;i <=3;i++) {
-//                    dis.readUTF();
-//                    }
-//                } 
-//                dis.close();
-//                //---------Ends here------------//
-//                if(check) {
-//                inFile = new DataOutputStream(new FileOutputStream ("addItems.txt",true));
-//                String restId = txtRestId.getText();
-//                 String itemCategory = category.getSelectedItem().toString();
-//               String price = txtPrice.getText();
-//                String itemNum = txtItemNum.getText();
-//                String itemDesc = txtItemDesc.getText();
-//                if(restId.isEmpty() || itemDesc.isEmpty()||itemNum.isEmpty()||txtPrice.getText().isEmpty()) {
-//                    JOptionPane.showMessageDialog(null,"Fields Cant be empty","Attention",JOptionPane.INFORMATION_MESSAGE);
-//                }else
-//                {
-//                inFile.writeUTF(restId);
-//                inFile.writeUTF(itemNum);
-//                 inFile.writeUTF(itemCategory);
-//                inFile.writeUTF(itemDesc);
-//                inFile.writeUTF(price);
-//               inFile.close();
-//                }
-//                 int a =JOptionPane.showConfirmDialog(null, "Item Added.Do you Want to Add Another Item ?", "Choices",JOptionPane.YES_NO_OPTION);
-//                 if(a == 0) 
-//                 {  
-//                  txtItemNum.setText("");
-//                  txtItemDesc.setText("");
-//                  txtPrice.setText("");
-//                 }else {
-//                  AddNewItems.this.dispose();
-//                  new RestaurantHome(id);
-//                 }
-//                
-//            }
-//                    }        
-//            catch (FileNotFoundException ex) {
-//                System.out.println("File not found");
-//            }
-//            catch (Exception ex) {
-//                System.out.println("Error in Add items file.No fields can be empty");
-//               // JOptionPane.showMessageDialog(null,ex.getMessage(),"name",JOptionPane.ERROR_MESSAGE);
-//            }
 
                 String restid = txtRestId.getText();
                 String itemnum = txtItemNum.getText();

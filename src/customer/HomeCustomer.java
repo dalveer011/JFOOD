@@ -76,7 +76,7 @@ public class HomeCustomer extends MenuCustomer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 conn = new DBConnection(); 
-                rs = conn.getInfo("select LoginId,Name from RestaurantOwners_Jfood  where province = '"+cmbState.getSelectedItem()+"' and city = '"+cmbCity.getSelectedItem()+"'");
+                rs = conn.getInfo("select restaurantId,Name from RestaurantOwners_Jfood  where province = '"+cmbState.getSelectedItem()+"' and city = '"+cmbCity.getSelectedItem()+"'");
                 try {
                 int count = 0 ;
                     
@@ -91,7 +91,7 @@ public class HomeCustomer extends MenuCustomer {
                    public void actionPerformed(ActionEvent e) {
                   
                            new DisplayItems(rstId, LoginForm.customer.getLoginId());
-                     
+                           HomeCustomer.this.dispose();
                    }
                });
                          panelCenterBottom.validate();
@@ -171,7 +171,7 @@ public class HomeCustomer extends MenuCustomer {
             public void actionPerformed(ActionEvent e) 
             {
                 LogOut l2 = new LogOut();
-                HomeCustomer.this.dispose();
+                 Customer.completeShoppingList.clear();
             }                
             }
         );

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import customer.*;
 /**
  *
  * @author Mazhar
@@ -134,7 +134,11 @@ public class DBConnection {
             String province, String postalCode, 
             String email, String phone)
     {
+<<<<<<< HEAD
         String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (RESTAURANTID, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
+=======
+        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (restaurantId, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
+>>>>>>> origin/master
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
                 
         try {
@@ -268,11 +272,7 @@ public class DBConnection {
             stmt.setString(5,price);
 //            stmt.addBatch();
             stmt.executeQuery();
-            conn.commit();
-            
-        
-        
-        
+            conn.commit();   
     }
     
     public void updateItems(String itemnum,String restid ,String category , String itemDesc,String price) throws SQLException
@@ -305,7 +305,7 @@ public class DBConnection {
     public void UpdateCreditCardBalance (String loginId, double curBal, String card, String expiry, 
             String ccv)
     {
-        String updateQuery = "Update CUSTOMER_WALLET_JFOOD "
+        String updateQuery = "Update CUSTOMERs_JFOOD "
                 + "SET CURRENTBAL = ?, "
                 + "CARDINFO = ?, EXPIRY = ?, CCV = ?"
                 + "WHERE LOGINID = ?";
@@ -325,7 +325,32 @@ public class DBConnection {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception", JOptionPane.ERROR_MESSAGE);
         }
     }
+public void addOrder(int orderNum,String loginId,String restaurantId,ArrayList itemNumbers){
+        try {
+            System.out.println(orderNum+loginId+restaurantId);
+            String query = "insert into orders_jfood values(?,?,?,?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, orderNum);
+            stmt.setString(2, restaurantId);
+            stmt.setString(3, loginId);
+            stmt.setInt(4,0);
+            stmt.executeUpdate();
+            String query2 = "insert into order_items_jfood values(?,?,?,?)";
+            stmt = conn.prepareStatement(query2);
+            for(Object a :  itemNumbers){ 
+                AddtoCartRecord item = (AddtoCartRecord)a;      
+                 stmt.setInt(1, orderNum);
+                 stmt.setString(2, item.getTxtItemNo().getText());
+                 stmt.setString(3, Integer.toString(item.getQuantity()));
+                 stmt.setString(4, item.getTxtItemPrice().getText());
+                 stmt.executeUpdate();
+            }
+           JOptionPane.showMessageDialog(null,"Order Placed Successfully","Order Placed",JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Error occured"+ex.getMessage(),"Error occured",JOptionPane.ERROR_MESSAGE);
+        }
 
+}
 }
 
 

@@ -4,10 +4,6 @@
  * and open the template in the editor.
  */
 package customer;
-import customer.ThankUForAddingBalance;
-import customer.MenuCustomer;
-import customer.HomeCustomer;
-import customer.Customer_UpdateDetails;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -34,7 +30,7 @@ public class AddBalance extends MenuCustomer {
     
     private DBConnection db;
     private ResultSet rs;
-    private String query = "SELECT LOGINID, CURRENTBAL, CARDINFO, EXPIRY, CCV FROM CUSTOMER_WALLET_JFOOD";
+    private String query = "SELECT LOGINID, CURRENTBAL, CARDINFO, EXPIRY, CCV FROM CUSTOMERs_JFOOD";
 
     
     public AddBalance (final String id){
