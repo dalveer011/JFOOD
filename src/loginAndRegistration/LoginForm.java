@@ -17,10 +17,6 @@ import javax.swing.*;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -56,7 +52,7 @@ public class LoginForm extends JFrame{
     public static RestaurantOwner restaurantOwner;
     
     private String queryCustomer = "select loginId, password, role, fname, lname, address, city, province, postalcode, email, phone from CUSTOMERS_JFOOD ";
-    private String queryRestaurantOwner = "select loginId, password, role, name, address, city, province, postalcode, email, phone from RESTAURANTOWNERS_JFOOD ";
+    private String queryRestaurantOwner = "select restaurantId, password, role, name, address, city, province, postalcode, email, phone from RESTAURANTOWNERS_JFOOD ";
 
     public LoginForm ()
     {

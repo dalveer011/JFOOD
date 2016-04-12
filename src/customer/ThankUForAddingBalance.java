@@ -28,7 +28,7 @@ public class ThankUForAddingBalance extends MenuCustomer {
     private DBConnection db;
     private ResultSet rs;
     
-    private String queryWallet = "SELECT LOGINID, CURRENTBAL FROM CUSTOMER_WALLET_JFOOD";
+    private String queryWallet = "SELECT LOGINID, CURRENTBAL FROM CUSTOMERs_JFOOD";
     
     
     public ThankUForAddingBalance (String id){

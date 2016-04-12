@@ -190,7 +190,7 @@ public class CustomerRegistration extends JFrame {
                         db = new DBConnection();
                         db.addCustomerInfo (loginId, pass, role, fName, lName, streetAdd, city, province, postalCode, email, phone);
                         db.addSecurityQuestions(loginId, pass, role, secQues1, ans1, secQues2, ans2);
-                        db.addCreditCardInfo(loginId, "0", "0", "0", "0");
+                        //db.addCreditCardInfo(loginId, "0", "0", "0", "0");
                                           
                     JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
                     

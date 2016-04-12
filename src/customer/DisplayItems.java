@@ -237,7 +237,7 @@ public class DisplayItems extends MenuCustomer{
                 if(Customer.completeShoppingList.isEmpty()){
                       JOptionPane.showMessageDialog(null,"No item choosen", "Choose an item", JOptionPane.INFORMATION_MESSAGE);
                 }else{
-                new CheckOut(Customer.completeShoppingList,LoginForm.customer.getLoginId());
+                new CheckOut(Customer.completeShoppingList,LoginForm.customer.getLoginId(),restId);
                 DisplayItems.this.dispose();
             }
             }
