@@ -1,6 +1,9 @@
 
 package jfood;
 
+import loginAndRegistration.RestaurantRegistration;
+import loginAndRegistration.CustomerRegistration;
+import loginAndRegistration.LoginForm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;

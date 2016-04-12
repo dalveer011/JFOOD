@@ -5,6 +5,7 @@
  */
 package jfood;
 
+import customer.MenuCustomer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -27,8 +28,6 @@ public class LogOut extends MenuCustomer {
     private JButton btnContinue, btnExit;
     private JPanel panelCenter, panelCenterInside1, panelCenterInside2, panelCenterNorth, panelCenterMiddle, panelCenterSouth;
     private ImageIcon logo;
-    
-    
     public LogOut (){
         this.initComponents();
         this.setTitle("Logged out!");
@@ -44,9 +43,6 @@ public class LogOut extends MenuCustomer {
     private void initComponents (){
         panelCenterInside1 = new JPanel ();
         panelCenterInside2 = new JPanel (new FlowLayout(1, 10, 0));
-        
-       
-
         //Create the logo:
         logo = new ImageIcon (getClass().getResource("images/logo.png"));
         
@@ -90,39 +86,6 @@ public class LogOut extends MenuCustomer {
         panelCenterInside1.add(lblLogOut);
         panelCenterInside1.add(panelCenterInside2);
         
-        /*
-        //Logo is placed
-        
-        lblLogo = new JLabel(logo);
-        panelCenterNorth = new JPanel();
-        panelCenterNorth.setLayout (new FlowLayout());
-        panelCenterNorth.add(lblLogo);
-        
-        //The message!
-        lblLogOut = new JLabel ("\nThank you for using JFood. You have successfully logged out.");
-        lblLogOut.setAlignmentX(CENTER_ALIGNMENT);
-        lblLogOut.setAlignmentY(CENTER_ALIGNMENT);
-        lblLogOut.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
-        lblLogOut.setForeground(Color.BLUE);
-        
-        panelCenterMiddle = new JPanel ();
-        panelCenterMiddle.setLayout (new FlowLayout());
-        panelCenterMiddle.setAlignmentX(CENTER_ALIGNMENT);
-        panelCenterMiddle.add(lblLogOut);
-        
-        //My buttons!
-        btnContinue = new JButton ("Continue");
-        btnExit = new JButton ("Exit");
-        
-        panelCenterSouth = new JPanel();
-        panelCenterSouth.add(btnContinue);
-        panelCenterSouth.add(btnExit);
-        
-        panelCenter = new JPanel();
-        panelCenter.setLayout(new GridLayout (3,1));
-        panelCenter.add(panelCenterNorth);
-        panelCenter.add(panelCenterMiddle);
-        panelCenter.add(panelCenterSouth);
-        */
+       
     }
 }

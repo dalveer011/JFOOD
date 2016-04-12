@@ -5,6 +5,8 @@
  */
 package jfood;
 
+import database.DBConnection;
+import loginAndRegistration.LoginForm;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;

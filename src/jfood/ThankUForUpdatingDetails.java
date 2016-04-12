@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package jfood;
+import loginAndRegistration.LoginForm;
+import customer.MenuCustomer;
+import customer.HomeCustomer;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
