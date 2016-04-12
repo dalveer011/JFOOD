@@ -8,6 +8,10 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 /**
@@ -33,6 +37,7 @@ public class RestaurantRegistration extends JFrame {
     
     private DBConnection db = null;
     private JTextField txtRole;
+    private JComboBox comboBoxCity;
     
     
     //Constructors
@@ -55,7 +60,7 @@ public class RestaurantRegistration extends JFrame {
         goback = new JMenuItem("Go To Home");
         goback.setMnemonic('H');
         TitledBorder leftBorder = BorderFactory.createTitledBorder("Register");
-         leftBorder.setTitleJustification(TitledBorder.LEFT);
+        leftBorder.setTitleJustification(TitledBorder.LEFT);
         goback.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,7 +93,7 @@ public class RestaurantRegistration extends JFrame {
         txtPassword = new JPasswordField ();
         txtName = new JTextField ();
         txtStreetName = new JTextField ();
-        txtCity = new JTextField ();
+        comboBoxCity = new JComboBox ();
         txtPostalCode = new JTextField ();
         txtPhone = new JTextField ();
         txtEmail = new JTextField ();
@@ -96,8 +101,28 @@ public class RestaurantRegistration extends JFrame {
         txtAns2 = new JTextField ();
         txtRole = new JTextField("Restaurant Owner");
         txtRole.setEditable(false);
-                
-        //Creating the ComboBox
+        comboBoxProvince = new JComboBox();
+        
+        //Populating the ComboBox City and Province
+        
+        db = new DBConnection();
+        ResultSet rsGetState = db.getInfo("Select distinct STATE from JFOOD_CITIES");
+        ResultSet rsGetCity = db.getInfo("Select distinct city from JFOOD_CITIES ");
+        
+        try {
+            while (rsGetState.next()){
+                comboBoxProvince.addItem(rsGetState.getString(1));
+            }
+            rsGetState.close();
+            
+            while (rsGetCity.next()){
+                comboBoxCity.addItem(rsGetCity.getString (1));
+            }
+            rsGetCity.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RestaurantRegistration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
         String [] sq1 = {"What is your mothers maiden name?", "Which city you were born in?", 
         "What is your favourite holiday destination?"};
@@ -107,8 +132,7 @@ public class RestaurantRegistration extends JFrame {
         "Who is your favourite school teacher?"};
         comboBoxSq2 = new JComboBox(sq2);
         
-        String [] province = {"Ontario", "British Columbia", "Quebec", "Prince Edward Islands", "New Brunswick" , "Manitoba" , "Nova Scotia", "Alberta", "Saskatchewan", "Newfoundland and Labrador"};
-        comboBoxProvince = new JComboBox(province);
+        //String [] province = {"Ontario", "British Columbia", "Quebec", "Prince Edward Islands", "New Brunswick" , "Manitoba" , "Nova Scotia", "Alberta", "Saskatchewan", "Newfoundland and Labrador"};
                 
         //Register Button with actionlistener to Login form!
         
@@ -123,7 +147,7 @@ public class RestaurantRegistration extends JFrame {
                 String role = txtRole.getText();
                 String name = txtName.getText();
                 String streetAdd = txtStreetName.getText();
-                String city = txtCity.getText();
+                String city = (String)comboBoxCity.getSelectedItem();
                 String province = (String)comboBoxProvince.getSelectedItem();
                 String postalCode = txtPostalCode.getText();
                 String email = txtEmail.getText();
@@ -184,7 +208,7 @@ public class RestaurantRegistration extends JFrame {
         panelRegistration.add(lblStreetName);
         panelRegistration.add(txtStreetName);
         panelRegistration.add(lblCity);
-        panelRegistration.add(txtCity);
+        panelRegistration.add(comboBoxCity);
         panelRegistration.add(lblProvince);
         panelRegistration.add(comboBoxProvince);
         panelRegistration.add(lblPostalCode);
