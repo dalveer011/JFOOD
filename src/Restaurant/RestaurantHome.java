@@ -1,16 +1,20 @@
 
 package Restaurant;
 
+import database.DBConnection;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import jfood.HeaderFooter;
 import jfood.LogOut;
@@ -37,6 +41,17 @@ this.add(HeaderFooter.getFooter(new JLabel(new ImageIcon(getClass().getResource(
 this.add(center,BorderLayout.CENTER);
 //addign menuBar
 this.setJMenuBar(restMenuBar());
+DBConnection db = new DBConnection();
+ResultSet rs = db.getInfo("select count(status) from orders_jfood where status = 0 and restaurantid = '"+restId+"' group by restaurantid");
+    try {
+        if(rs.next()) {
+            int count = rs.getInt(1);
+            if(count > 0) 
+                JOptionPane.showMessageDialog(null,"You have "+count+" recent orders","Recent Order",JOptionPane.INFORMATION_MESSAGE);
+        }   
+    } catch (SQLException ex) {
+        System.out.println("Error in restaurant home constructor"+ex.getMessage());
+    }
 //Adding action listener to the menubar!
         addItem.addActionListener
         (
