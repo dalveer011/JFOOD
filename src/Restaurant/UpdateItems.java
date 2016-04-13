@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import database.DBConnection;
+import java.net.Socket;
 import jfood.HeaderFooter;
 import jfood.LogOut;
 
@@ -42,7 +43,7 @@ public class UpdateItems extends RestaurantMenuBar{
     private JTextField txtRestId,txtItemNum,txtPriceOld,txtPriceNew,txtItemDesc;
     private JComboBox avail,category;
     private JPanel PanelNorth,PanelSouth,PanelCenter;
-    private JButton btnConfirm,btnDone;
+    private JButton btnConfirm,btnViewInfo;
     private DataInputStream outFile;
     private DataOutputStream inFile;
     private String id;
@@ -80,67 +81,54 @@ public class UpdateItems extends RestaurantMenuBar{
                 }
                 else
                 {
-                db = new DBConnection();
-                   try {
-                       
-                       String query = "select itemnum,restaurantid,category,item_description,price from menu_items_jfood";
-                      
-                       rsUpdateItem= db.getInfo(query);
-                       
-                       
-                       boolean check=true;
-                       
-                       while(rsUpdateItem.next())
-                       {
-                           
-                           if(rsUpdateItem.getString(1).equals(itemnum))
-                           {
-                                db.updateItems(itemnum, restid, cat, itemDesc, price);
-                                check=false;
-                                JOptionPane.showMessageDialog(null, "Item Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
-                           }
-                       } 
-                           if(check)
-                           {
-                               JOptionPane.showMessageDialog(null, "No item with the provided item num", "Attention", JOptionPane.WARNING_MESSAGE);
-                           }
-                       
-                      
-                       
-                      
-                   }
-                   catch (SQLException ex) {
-                       JOptionPane.showConfirmDialog(null,"Problem in updating item","Attention",JOptionPane.WARNING_MESSAGE);
-                        JOptionPane.showMessageDialog(null,"Item couldnot be updated");
-                   }
-                   catch(Exception exe)
-                   {
-                       System.out.println("this is throwing an exception");  
-                   }
-                   
-                   
-                       
-                    db.closeConnection();
-                    System.out.println("Connection closed");
-                    new RestaurantHome(id);
-                    UpdateItems.this.dispose();
-               
-                }
-             
                 
+                   try {
+                        Socket socketUpdateitems = new Socket("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketUpdateitems.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream (socketUpdateitems.getOutputStream());
+                        
+                        dataToServer.writeInt(9);
+                        dataToServer.writeUTF(itemnum);
+                        dataToServer.writeUTF(restid);
+                        dataToServer.writeUTF(cat);
+                        dataToServer.writeUTF(itemDesc);
+                        dataToServer.writeUTF(price);
+                       
+                        boolean check = dataFromServer.readBoolean();
+                        if(check)
+                        {
+                            JOptionPane.showMessageDialog(null, "Item Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+                           int option =  JOptionPane.showConfirmDialog(null,"Do you want to update more items","Attention",JOptionPane.OK_CANCEL_OPTION);
+                            if(option==0)
+                            {
+                                new UpdateItems(id);
+                                
+                            }
+                            else
+                            {
+                                new RestaurantHome(id);
+                                UpdateItems.this.dispose();
+                            }
+                            
+                        }else
+                           {
+                                JOptionPane.showMessageDialog(null, "No item with the provided item num", "Attention", JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(null,"Item couldnot be updated");
+                           }
+                        socketUpdateitems.close();
+               
+                }catch (IOException ex) {
+                   System.out.println(ex.getMessage());
+                }
             }
+        }
             
         });
-        btnDone.addActionListener(new ActionListener() {
+        btnViewInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource()==btnDone)
-                {
-                    
-                    JOptionPane.showMessageDialog(null,"Done","Submit",JOptionPane.INFORMATION_MESSAGE);
-                    new RestaurantHome(id);
-                    UpdateItems.this.dispose();
-                }
+                  String restName = txtRestId.getText();
+               ViewInformation v1 = new ViewInformation(restName);
             }
         });   
         
@@ -278,23 +266,7 @@ public class UpdateItems extends RestaurantMenuBar{
             
             }
         );
-        avail.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(avail.getSelectedItem().equals("Yes"))
-        {
-            txtPriceOld.setVisible(true);
-            txtPriceNew.setVisible(true);
-        }
-         else if(avail.getSelectedItem().equals("No"))
-        {
-            txtPriceOld.setVisible(false);
-            txtPriceNew.setVisible(false);
-            
-        }
-                
-            }
-        });
+       
          
     }
     
@@ -304,16 +276,15 @@ public class UpdateItems extends RestaurantMenuBar{
       
         lblRestId = new JLabel("RestaurantId");
         lblItemNum = new JLabel("Item Number");
-        lblAvail = new JLabel("Availability");
+       
         lblPriceOld = new JLabel("Present Price");
         lblPriceNew = new JLabel("New Price");
         lblItemDesc = new JLabel("Item Description");
         lblCategory = new JLabel("Item Category");
         btnConfirm = new JButton("Confirm");
-        btnDone = new JButton("Done");
+        btnViewInfo = new JButton("ViewInfo");
         
-        String[] availlist = {"Yes","No"};
-        avail = new JComboBox(availlist);
+        
         
         String [] catlist = {"Rice","Noodles","Chicken","Fish","Dessert","Entree","Soup","Salad"};
         category = new JComboBox(catlist);
@@ -327,7 +298,7 @@ public class UpdateItems extends RestaurantMenuBar{
         txtItemDesc = new JTextField();
     
         
-        PanelCenter = new JPanel(new GridLayout(8,2));
+        PanelCenter = new JPanel(new GridLayout(6,2));
         PanelCenter.add(lblRestId);
         PanelCenter.add(txtRestId);
         PanelCenter.add(lblItemNum);
@@ -336,14 +307,12 @@ public class UpdateItems extends RestaurantMenuBar{
         PanelCenter.add(txtItemDesc);
         PanelCenter.add(lblCategory);
         PanelCenter.add(category);
-        PanelCenter.add(lblAvail);
-        PanelCenter.add(avail);
-        PanelCenter.add(lblPriceOld);
-        PanelCenter.add(txtPriceOld);
+        
+        
         PanelCenter.add(lblPriceNew);
         PanelCenter.add(txtPriceNew);
         PanelCenter.add(btnConfirm);
-        PanelCenter.add(btnDone);
+        PanelCenter.add(btnViewInfo);
 
     }
 

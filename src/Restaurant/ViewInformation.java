@@ -40,55 +40,9 @@ this.setTitle("Items Information for Restaurant ID "+restName);
         this.add(HeaderFooter.getHeader(new JLabel(new ImageIcon(getClass().getResource("resources/logo2.png")))), BorderLayout.NORTH);
         this.add(HeaderFooter.getFooter(new JLabel(new ImageIcon(getClass().getResource("images/copyright.png")))), BorderLayout.SOUTH);
         
-//       try {
-//                    DataInputStream dis = new DataInputStream(new FileInputStream("addItems.txt"));
-//                   //If no items are there in choosen category to check that
-//                    int count = 0;
-//                     int i = 0; // to increament array
-//                    while(dis.available() > 0) {
-//                    //Getting data from file to view item no to restaurant owner to make delete more easy
-//                    String restIdFromFile = dis.readUTF();
-//                    String itemNoFromFile = dis.readUTF();
-//                    String catFromFile = dis.readUTF();
-//                    if(restId.equals(restIdFromFile) && category.equals(catFromFile)) {
-//                        String desc = dis.readUTF();
-//                        String price = dis.readUTF();
-//                        allItems[i][0] = itemNoFromFile;
-//                        allItems[i][1] = desc;
-//                        allItems[i][2] = price;
-//                         i++;
-//                        count++;
-//                    }else{
-//                    dis.readUTF();
-//                    dis.readUTF();
-//                    }
-//                    }
-                  //String[] columns = {"Item no ","Item Description","Item Cost"};
-//                    info = new JTable(allItems,columns);
-//                    //info.setModel(new DefaultTableModel(allItems, columns));
-//                    //Adding table to center of center main
-//                    centerMain.add(info);
-//                    //Adding center main to center of frame
-//                    JLabel cat = new JLabel("**********These Items are for Category :    "+category+"   ************");
-//                    cat.setFont(new Font("Times New Roman", 2, 14));
-//                    centerMain.add(cat,BorderLayout.NORTH);
-//                    this.add(centerMain,BorderLayout.CENTER);
-//                    if(count > 0) {
-//                    this.setVisible(true);
-//                    }else {
-//                       JOptionPane.showMessageDialog(null, "No items in choosen category for this restaurant", "Item Details", JOptionPane.ERROR_MESSAGE); 
-//                        ViewInformation.this.dispose();
-//                    }
-//                    dis.close();
-//                } catch (FileNotFoundException ex) {
-//                    Logger.getLogger(DeleteItems.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(DeleteItems.class.getName()).log(Level.SEVERE, null, ex);
-                
-
-      //Adding action listener to ok
+//      
       db = new DBConnection();
-      String query = "select itemnum,restaurantid,category,item_description,price from menu_items_jfood";
+      String query = "select itemnum,restaurantid,category,item_description,price from menu_items_jfood where restaurantid='"+ restName+"'";
       rsView = db.getInfo(query);
       info = new JTable();
       

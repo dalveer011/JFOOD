@@ -96,7 +96,7 @@ public class AddNewItems extends RestaurantMenuBar{
                         }
                         socketAdditems.close();
                     } catch (IOException ex) {
-                        Logger.getLogger(AddNewItems.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println(ex.getMessage());
                     }          
             }
         }
