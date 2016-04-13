@@ -270,7 +270,6 @@ public class DBConnection {
             stmt.setString(3,category);
             stmt.setString(4,itemDesc);
             stmt.setString(5,price);
-//            stmt.addBatch();
             stmt.executeQuery();
             conn.commit();   
     }
