@@ -47,6 +47,9 @@ public RecentOrder(String restauranttId) {
         this.add(panelCentre,BorderLayout.CENTER);
         this.setJMenuBar(restMenuBar());
         this.setVisible(true);
+        
+         
+        
          addItem.addActionListener
         (
                 new ActionListener ()
@@ -134,7 +137,10 @@ private void initComponents() {
                    try {
                        db = new DBConnection();
                        db.updateOrder(Integer.parseInt(orderNum.getText()));
-                       panelCentre.validate();
+                       //panelCentre.revalidate();
+                       new RecentOrder(restId);
+                       RecentOrder.this.dispose();
+                       
                    } catch (SQLException ex) {
                                JOptionPane.showMessageDialog(null,"Error occured in recent orders in action listener of orderDone button"+ex.getMessage(), "null", JOptionPane.ERROR_MESSAGE);
                    }
