@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import jfood.HeaderFooter;
+import jfood.LogOut;
 
 /**
  *
@@ -85,6 +86,7 @@ private void initComponents() {
                    try {
                        db = new DBConnection();
                        db.updateOrder(Integer.parseInt(orderNum.getText()));
+                       panelCentre.validate();
                    } catch (SQLException ex) {
                                JOptionPane.showMessageDialog(null,"Error occured in recent orders in action listener of orderDone button"+ex.getMessage(), "null", JOptionPane.ERROR_MESSAGE);
                    }
@@ -97,5 +99,57 @@ private void initComponents() {
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(null,"Error occured in recent orders init"+ex.getMessage(), "null", JOptionPane.INFORMATION_MESSAGE);
     }
+ addItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                AddNewItems a = new AddNewItems(restId);
+                RecentOrder.this.dispose();
+            }                
+            }
+        );
+        
+        deleteItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                DeleteItems a = new DeleteItems(restId);
+                  RecentOrder.this.dispose();
+            }                
+            }
+        );
+        
+        updateItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                UpdateItems a = new UpdateItems(restId);
+                  RecentOrder.this.dispose();
+            }                
+            }
+        );
+        
+        logOut.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LogOut a = new LogOut();
+                  RecentOrder.this.dispose();
+            }                
+            }
+        );
 }
+
 }

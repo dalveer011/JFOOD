@@ -38,8 +38,9 @@ private ResultSet rsCustInfo,rsOrderInfo,getCustNum;
         rsCustInfo = db.getInfo("select fname||' '||lname,address,city,province,postalCode,phone from customers_jfood where loginid = '"+custId+"'");
     if(rsCustInfo.next()) {
     lblCustName.setText(rsCustInfo.getString(1));
-    lblCustaddress.setText(rsCustInfo.getString(2)+" \n"+rsCustInfo.getString(3)+" "+rsCustInfo.getString(4)+" "+rsCustInfo.getString(5)+
-    "\n Phone "+rsCustInfo.getString(6));
+    txtAreaAddress.setText(rsCustInfo.getString(2)+" \n");
+    txtAreaAddress.append(rsCustInfo.getString(3)+" "+rsCustInfo.getString(4)+" "+rsCustInfo.getString(5)+"\n");
+    txtAreaAddress.append("Phone "+rsCustInfo.getString(6));
     }
     rsCustInfo.close();
     rsOrderInfo = db.getInfo("select itemNum,item_description,category,quantity,paidEach from menu_items_jfood join order_items_jfood using(itemNum) where orderNum = "+orderNum+"");
@@ -71,12 +72,13 @@ private ResultSet rsCustInfo,rsOrderInfo,getCustNum;
         jLabel3 = new javax.swing.JLabel();
         lblOrderNum = new javax.swing.JLabel();
         lblCustName = new javax.swing.JLabel();
-        lblCustaddress = new javax.swing.JLabel();
         btnOK = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtAreaAddress = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Order Information");
         setResizable(false);
         setSize(new java.awt.Dimension(800, 700));
@@ -91,8 +93,6 @@ private ResultSet rsCustInfo,rsOrderInfo,getCustNum;
 
         lblCustName.setText("jLabel5");
 
-        lblCustaddress.setText("jLabel6");
-
         btnOK.setText("OK");
         btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,28 +105,35 @@ private ResultSet rsCustInfo,rsOrderInfo,getCustNum;
         ));
         jScrollPane2.setViewportView(jTable2);
 
+        txtAreaAddress.setEditable(false);
+        txtAreaAddress.setColumns(20);
+        txtAreaAddress.setRows(5);
+        jScrollPane1.setViewportView(txtAreaAddress);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnOK)
-                .addGap(87, 87, 87))
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(200, 200, 200)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblCustaddress)
-                            .addComponent(lblCustName)
-                            .addComponent(lblOrderNum))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(137, 137, 137)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3))
+                                .addGap(51, 51, 51)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCustName)
+                                    .addComponent(lblOrderNum)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(281, 281, 281)
+                        .addComponent(btnOK)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -141,11 +148,11 @@ private ResultSet rsCustInfo,rsOrderInfo,getCustNum;
                     .addComponent(jLabel2)
                     .addComponent(lblCustName))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(lblCustaddress))
-                .addGap(74, 74, 74)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnOK)
                 .addGap(4, 4, 4))
@@ -199,10 +206,11 @@ private ResultSet rsCustInfo,rsOrderInfo,getCustNum;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     private javax.swing.JLabel lblCustName;
-    private javax.swing.JLabel lblCustaddress;
     private javax.swing.JLabel lblOrderNum;
+    private javax.swing.JTextArea txtAreaAddress;
     // End of variables declaration//GEN-END:variables
 }

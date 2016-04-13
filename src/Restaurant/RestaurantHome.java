@@ -1,8 +1,6 @@
 
 package Restaurant;
 
-import Restaurant.DeleteItems;
-import Restaurant.AddNewItems;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -24,7 +22,7 @@ import loginAndRegistration.LoginForm;
  */
 public class RestaurantHome  extends RestaurantMenuBar {
 JPanel logo,buttons,content,center;
-JButton add,delete,update,logout2;
+JButton add,delete,update,logout2,recentOrders;
 JLabel image,contentBody;
 String restId;
 
@@ -79,19 +77,6 @@ this.setJMenuBar(restMenuBar());
             }
         );
         
-        updateAcDetails.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                UpdateRestaurantDetails a = new UpdateRestaurantDetails(restId);
-                RestaurantHome.this.dispose();
-            }                
-            }
-        );
-        
         logOut.addActionListener
         (
                 new ActionListener ()
@@ -104,8 +89,6 @@ this.setJMenuBar(restMenuBar());
             }                
             }
         );
-        
-        
 //Adding Tool Bar
 this.add(this.getRestaurantToolBar(),BorderLayout.EAST);
 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -169,7 +152,7 @@ add = new JButton("Add item");
 delete = new JButton("Delete Item");
 update = new JButton("Update Item Details");
 logout2 = new JButton("Log Out");
-
+recentOrders = new JButton("Recent Orders");
 image = new JLabel(new ImageIcon(getClass().getResource("images/logo.png")));
 contentBody = new JLabel("Restaurant");
 contentBody.setFont(new Font("Arial", 1, 46));
@@ -185,7 +168,7 @@ buttons.add(add);
 buttons.add(delete);
 buttons.add(update);
 buttons.add(logout2);
-
+buttons.add(recentOrders);
 center = new JPanel(new GridLayout(3, 1));
 center.add(logo);
 center.add(content);
@@ -228,6 +211,14 @@ logout2.addActionListener(new ActionListener() {
             LogOut a = new LogOut();
             RestaurantHome.this.dispose();
         
+    }
+});
+recentOrders.addActionListener(new ActionListener() {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    new RecentOrder(restId);
+    RestaurantHome.this.dispose();
     }
 });
 
