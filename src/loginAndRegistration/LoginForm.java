@@ -118,7 +118,7 @@ public class LoginForm extends JFrame{
                                 socketfgPass.close();
                                 LoginForm.this.dispose();
                             }else{
-                                JOptionPane.showMessageDialog(null, "CustomerId doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Customer Id doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
                             }
                             
                         }else if (role == "Restaurant Owner")
@@ -132,7 +132,7 @@ public class LoginForm extends JFrame{
                                 socketfgPass.close();
                                 LoginForm.this.dispose();
                             }else{
-                                JOptionPane.showMessageDialog(null, "RestaurantId doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Restaurant Id doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
                             }    
                         }
                         
@@ -143,9 +143,8 @@ public class LoginForm extends JFrame{
             }
         });
         
-        
         btnLogin.addActionListener(new ActionListener() {
-            
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = null;
@@ -161,15 +160,8 @@ public class LoginForm extends JFrame{
                 String email = null;
                 String phone = null;
                 
-                
-                String role = (String) comboBoxRole.getSelectedItem();
-                if (role == "Customer")
-                {
-                    rs = db.getInfo(queryCustomer);
-                }else if (role == "Restaurant Owner")
-                {
-                    rs = db.getInfo(queryRestaurantOwner);                    
-                }
+                boolean checkCus = false;
+                boolean checkRst = false;
                 
                 String entId = txtEnterId.getText();
                 String entPass = String.valueOf(txtEnterPassword.getPassword());
@@ -177,68 +169,174 @@ public class LoginForm extends JFrame{
                 if (entId.trim().isEmpty() || entPass.trim().isEmpty())
                 {
                     JOptionPane.showMessageDialog(null, "Id and Password field can not be left empty", "Empty fields", JOptionPane.ERROR_MESSAGE);
-                }else 
+                }else
                 {
-                    int count = 0;
                     try {
-                        while (rs.next()){
-                            id = rs.getString(1);
-                            pass = rs.getString(2);
-                            myrole = rs.getString(3);
-                            if (id.equals(entId) & pass.equals(entPass) & myrole.equals(role))
-                                if (role.equals("Restaurant Owner"))
-                            {  
-                                System.out.println("Role is restaurant");
-                                restaurantName = rs.getString(4);
-                                address = rs.getString(5);
-                                city = rs.getString(6);
-                                province= rs.getString(7);
-                                pc = rs.getString(8);
-                                email = rs.getString(9);
-                                phone = rs.getString(10);
-                                count++;
-                            }
-                            else        
-                            {
-                                System.out.println("Role is customer");
-                                fName = rs.getString(4);
-                                lName = rs.getString(5);
-                                address = rs.getString(6);
-                                city = rs.getString(7);
-                                province= rs.getString(8);
-                                pc = rs.getString(9);
-                                email = rs.getString(10);
-                                phone = rs.getString(11);
-                                count++;
-                            }
-                            }
-                                                
-                        if (count == 0){
-                            JOptionPane.showMessageDialog(null,"Your credentials are not Valid.\n Try Again!", "invalid id//Password", JOptionPane.ERROR_MESSAGE);
-                            txtEnterId.setText("");
-                            txtEnterPassword.setText("");
-                            txtEnterId.grabFocus();    
-                        } 
+                        Socket socketLogin = new Socket("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketLogin.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream (socketLogin.getOutputStream());
                         
-                        if (count > 0 ){
-                            if (role == "Customer"){
-                                customer = new Customer(entId, entPass, role, fName, lName, address, city, province, pc, email, phone);
-                                new HomeCustomer(customer.getLoginId());
-                                db.closeConnection();
-                                LoginForm.this.dispose();
-                            }else{
-                                restaurantOwner = new RestaurantOwner(entId, entPass, role, restaurantName, address, city, province, pc, email, phone);
-                                new RestaurantHome(restaurantOwner.getLoginId());
-                                db.closeConnection();
-                                LoginForm.this.dispose();
+                        String role = (String) comboBoxRole.getSelectedItem();
+                            if (role == "Customer")
+                            {
+                                dataToServer.writeInt(3); //Process Id for Login Check | IF CUSTOMER COMBOBOX WAS CHECKED
+                                dataToServer.writeUTF(entId);
+                                dataToServer.writeUTF(entPass);
+                                boolean logPassCheckCus = dataFromServer.readBoolean();
+                                
+                                if (logPassCheckCus){
+                                    id = entId;
+                                    pass = entPass;
+                                    myrole = dataFromServer.readUTF();
+                                    fName = dataFromServer.readUTF();
+                                    lName = dataFromServer.readUTF();
+                                    address = dataFromServer.readUTF();
+                                    city = dataFromServer.readUTF();
+                                    province = dataFromServer.readUTF();
+                                    pc = dataFromServer.readUTF();
+                                    email = dataFromServer.readUTF();
+                                    phone = dataFromServer.readUTF();
+                                    checkCus = true;
+                                }else{
+                                    JOptionPane.showMessageDialog(null, "LoginId and PassWord incorrect", "LoginID/Pass Mismatch", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }else if (role == "Restaurant Owner")
+                            {
+                                dataToServer.writeInt(4); //Process Id for Login Check | IF RESTAURANT OWNER COMBOBOX WAS CHECKED
+                                dataToServer.writeUTF(entId);
+                                dataToServer.writeUTF(entPass);
+                                boolean logPassCheckRst = dataFromServer.readBoolean();
+                                
+                                if (logPassCheckRst){
+                                    id = entId;
+                                    pass = entPass;
+                                    myrole = dataFromServer.readUTF();
+                                    restaurantName = dataFromServer.readUTF();
+                                    address = dataFromServer.readUTF();
+                                    city = dataFromServer.readUTF();
+                                    province = dataFromServer.readUTF();
+                                    pc = dataFromServer.readUTF();
+                                    email = dataFromServer.readUTF();
+                                    phone = dataFromServer.readUTF();
+                                    checkRst = true;
+                                }else{
+                                    JOptionPane.showMessageDialog(null, "Loginid and Password incorrect", "LoginID & Password Mismatch", JOptionPane.ERROR_MESSAGE);
+                                }
                             }
-                        }
-                        } catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Login Form", JOptionPane.ERROR_MESSAGE);
-                        }
-                } 
+                        socketLogin.close();
+                        } catch (IOException ex) {
+                        Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+                if (checkCus){
+                    customer = new Customer(entId, entPass, myrole, fName, lName, address, city, province, pc, email, phone);
+                    new HomeCustomer(customer.getLoginId());
+                    LoginForm.this.dispose();
+                }else if (checkRst)
+                {
+                    restaurantOwner = new RestaurantOwner(entId, entPass, myrole, restaurantName, address, city, province, pc, email, phone);
+                    new RestaurantHome(restaurantOwner.getLoginId());
+                    LoginForm.this.dispose();
+                }
             }
         });
+        
+//        btnLogin.addActionListener(new ActionListener() {
+//            
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String id = null;
+//                String pass = null;
+//                String myrole = null;
+//                String fName = null;
+//                String lName = null;
+//                String restaurantName = null;
+//                String address = null;
+//                String city = null;
+//                String province = null;
+//                String pc = null;
+//                String email = null;
+//                String phone = null;
+//                
+//                
+//                String role = (String) comboBoxRole.getSelectedItem();
+//                if (role == "Customer")
+//                {
+//                    rs = db.getInfo(queryCustomer);
+//                }else if (role == "Restaurant Owner")
+//                {
+//                    rs = db.getInfo(queryRestaurantOwner);                    
+//                }
+//                
+//                String entId = txtEnterId.getText();
+//                String entPass = String.valueOf(txtEnterPassword.getPassword());
+//                
+//                if (entId.trim().isEmpty() || entPass.trim().isEmpty())
+//                {
+//                    JOptionPane.showMessageDialog(null, "Id and Password field can not be left empty", "Empty fields", JOptionPane.ERROR_MESSAGE);
+//                }else 
+//                {
+//                    int count = 0;
+//                    try {
+//                        while (rs.next()){
+//                            id = rs.getString(1);
+//                            pass = rs.getString(2);
+//                            myrole = rs.getString(3);
+//                            if (id.equals(entId) & pass.equals(entPass) & myrole.equals(role))
+//                                if (role.equals("Restaurant Owner"))
+//                            {  
+//                                System.out.println("Role is restaurant");
+//                                restaurantName = rs.getString(4);
+//                                address = rs.getString(5);
+//                                city = rs.getString(6);
+//                                province= rs.getString(7);
+//                                pc = rs.getString(8);
+//                                email = rs.getString(9);
+//                                phone = rs.getString(10);
+//                                count++;
+//                            }
+//                            else        
+//                            {
+//                                System.out.println("Role is customer");
+//                                fName = rs.getString(4);
+//                                lName = rs.getString(5);
+//                                address = rs.getString(6);
+//                                city = rs.getString(7);
+//                                province= rs.getString(8);
+//                                pc = rs.getString(9);
+//                                email = rs.getString(10);
+//                                phone = rs.getString(11);
+//                                count++;
+//                            }
+//                            }
+//                                                
+//                        if (count == 0){
+//                            JOptionPane.showMessageDialog(null,"Your credentials are not Valid.\n Try Again!", "invalid id//Password", JOptionPane.ERROR_MESSAGE);
+//                            txtEnterId.setText("");
+//                            txtEnterPassword.setText("");
+//                            txtEnterId.grabFocus();    
+//                        } 
+//                        
+//                        if (count > 0 ){
+//                            if (role == "Customer"){
+//                                customer = new Customer(entId, entPass, role, fName, lName, address, city, province, pc, email, phone);
+//                                new HomeCustomer(customer.getLoginId());
+//                                db.closeConnection();
+//                                LoginForm.this.dispose();
+//                            }else{
+//                                restaurantOwner = new RestaurantOwner(entId, entPass, role, restaurantName, address, city, province, pc, email, phone);
+//                                new RestaurantHome(restaurantOwner.getLoginId());
+//                                db.closeConnection();
+//                                LoginForm.this.dispose();
+//                            }
+//                        }
+//                        } catch (SQLException ex) {
+//                            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Login Form", JOptionPane.ERROR_MESSAGE);
+//                        }
+//                } 
+//            }
+//        });
         
         
         String [] role = {"Customer", "Restaurant Owner"};
