@@ -1,6 +1,8 @@
 
 package jfood;
 
+import Restaurant.UpdateRestaurantDetails;
+
 public class JFood {
 
     /**
@@ -14,6 +16,7 @@ public class JFood {
         WelcomeScreen w1 = new WelcomeScreen();
         //ConfirmRole c = new ConfirmRole();
         //new Customer_UpdateDetails("mazhar");
+        new UpdateRestaurantDetails("hakka1");
         
     }
     

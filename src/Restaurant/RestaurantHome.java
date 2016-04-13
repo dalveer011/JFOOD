@@ -79,6 +79,19 @@ this.setJMenuBar(restMenuBar());
             }
         );
         
+        updateAcDetails.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                UpdateRestaurantDetails a = new UpdateRestaurantDetails(restId);
+                RestaurantHome.this.dispose();
+            }                
+            }
+        );
+        
         logOut.addActionListener
         (
                 new ActionListener ()
@@ -91,6 +104,8 @@ this.setJMenuBar(restMenuBar());
             }                
             }
         );
+        
+        
 //Adding Tool Bar
 this.add(this.getRestaurantToolBar(),BorderLayout.EAST);
 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
