@@ -201,41 +201,34 @@ public class DisplayItems extends MenuCustomer{
                 } 
             }
         });
-        
-        
-                            
-        
-
         //Adding action listener to add to cart
         btnAddToCart.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    DataOutputStream dos = new DataOutputStream(new FileOutputStream("order.txt", true));
+                try{   
+               
                     for(Object z : recordList) {
                     AddtoCartRecord x = (AddtoCartRecord)z;
                     if(x.isChecked()) {
-                        Customer.completeShoppingList.add(x);
+                        LoginForm.customer.getShoppingList().add(x);
                     }
                     } 
-                    dos.close();
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(DisplayItems.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(DisplayItems.class.getName()).log(Level.SEVERE, null, ex);
+                
+                }catch(Exception ex) {
+                JOptionPane.showMessageDialog(null,"No items selected from category","Error",JOptionPane.ERROR_MESSAGE);
                 }
-            }
+            }    
         });
         //Adding action listener to checkout
         btnCheckOut.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(Customer.completeShoppingList.isEmpty()){
+                if( LoginForm.customer.getShoppingList().isEmpty()){
                       JOptionPane.showMessageDialog(null,"No item choosen", "Choose an item", JOptionPane.INFORMATION_MESSAGE);
                 }else{
-                new CheckOut(Customer.completeShoppingList,LoginForm.customer.getLoginId(),restId);
+                new CheckOut( LoginForm.customer.getShoppingList(),LoginForm.customer.getLoginId(),restId);
                 DisplayItems.this.dispose();
             }
             }

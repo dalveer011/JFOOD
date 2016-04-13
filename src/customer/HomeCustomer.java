@@ -1,6 +1,5 @@
 
 package customer;
-import customer.Customer_UpdateDetails;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,8 +8,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import database.DBConnection;
 import jfood.HeaderFooter;
 import jfood.LogOut;
@@ -81,7 +78,7 @@ public class HomeCustomer extends MenuCustomer {
                 int count = 0 ;
                     
            while(rs.next()) {
-                  rstId = rs.getString(1);
+                  final JLabel restName = new JLabel(rs.getString(1));
                          panelCenterBottom.add(new JLabel(rs.getString(2)));
                          JButton go = new JButton("GO");
                          panelCenterBottom.add(go);
@@ -90,7 +87,7 @@ public class HomeCustomer extends MenuCustomer {
                    @Override
                    public void actionPerformed(ActionEvent e) {
                   
-                           new DisplayItems(rstId, LoginForm.customer.getLoginId());
+                           new DisplayItems(restName.getText(), LoginForm.customer.getLoginId());
                            HomeCustomer.this.dispose();
                    }
                });
@@ -171,7 +168,7 @@ public class HomeCustomer extends MenuCustomer {
             public void actionPerformed(ActionEvent e) 
             {
                 LogOut l2 = new LogOut();
-                 Customer.completeShoppingList.clear();
+                  LoginForm.customer.getShoppingList().clear();
             }                
             }
         );

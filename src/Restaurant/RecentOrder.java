@@ -1,7 +1,6 @@
 
 package Restaurant;
 
-import Restaurant.RestaurantMenuBar;
 import database.DBConnection;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -10,8 +9,6 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;

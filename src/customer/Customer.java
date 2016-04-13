@@ -23,7 +23,7 @@ public class Customer {
     private String postalCode;
     private String email;
     private String phone;
-    public static ArrayList completeShoppingList = new ArrayList();
+    public  ArrayList completeShoppingList;
     public Customer(String loginId, String password, String role, String firstName, String lastName, String streetAddress, String city, String province, String postalCode, String email, String phone) {
         this.loginId = loginId;
         this.password = password;
@@ -36,8 +36,11 @@ public class Customer {
         this.postalCode = postalCode;
         this.email = email;
         this.phone = phone;
+        this.completeShoppingList = new ArrayList();
     }
-    
+    public ArrayList getShoppingList() {
+    return this.completeShoppingList;
+    }
     public Customer (){
         
     }
