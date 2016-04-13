@@ -269,7 +269,7 @@ public class Customer_UpdateDetails extends MenuCustomer {
                     db.closeConnection();
                     new ThankUForUpdatingDetails(id);
                     Customer_UpdateDetails.this.dispose();
-                }             
+            }             
         }
     });
         

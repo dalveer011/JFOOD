@@ -3,11 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/Users/damil/Desktop/JFOOD/src/Restaurant/AddNewItems.java</file>
             <file>file:/Users/damil/Desktop/JFOOD/src/Restaurant/DeleteItems.java</file>
             <file>file:/Users/damil/Desktop/JFOOD/src/Restaurant/UpdateItems.java</file>
             <file>file:/Users/damil/Desktop/JFOOD/src/jfood/JFood.java</file>
             <file>file:/Users/damil/Desktop/JFOOD/src/database/DBConnection.java</file>
+=======
+            <file>file:/Users/Mazhar/Documents/JFOOD/src/jfood/JFood.java</file>
+            <file>file:/Users/Mazhar/Documents/JFOOD/src/customer/Customer_UpdateDetails.java</file>
+            <file>file:/Users/Mazhar/Documents/JFOOD/src/Restaurant/UpdateRestaurantDetails.java</file>
+            <file>file:/Users/Mazhar/Documents/JFOOD/src/Restaurant/RestaurantHome.java</file>
+            <file>file:/Users/Mazhar/Documents/JFOOD/src/loginAndRegistration/RestaurantRegistration.java</file>
+            <file>file:/Users/Mazhar/Documents/JFOOD/src/database/DBConnection.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

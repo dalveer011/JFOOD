@@ -17,10 +17,16 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -45,10 +51,10 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
     //Declaration for Panel Inside
     private JLabel lblHeadingInside,lblId;
     
-    private JLabel lblName, lblLastName, lblCity, 
+    private JLabel lblName, lblCity, 
             lblStreetName, lblProvince, lblPostalCode, lblEmail, lblPhone,lblPass;
 
-    private JTextField txtName, txtLastName, txtCity, 
+    private JTextField txtName, txtCity, 
             txtStreetName, txtProvince, txtPostalCode, txtEmail, txtPhone,txtPass,txtId;
     
     private JButton btnUpdate;
@@ -70,16 +76,14 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
     private JLabel lblAns2;
     private JTextField txtAns1;
     private JTextField txtAns2;
-    private JTextField txtSq1;
-    private JTextField txtSq2;
     private JTextField txtRole;
-    
-    private DataInputStream dIn;
-    private DataOutputStream dOut;
     
     private DBConnection db = null;
     private ResultSet rs = null;
-    private String querySecQuestions = "SELECT LOGINID, SECURITY_QUESTION1, ANSWER_1, SECURITY_QUESTION2, ANSWER_2 FROM SECURITY_QUESTIONS_JFOOD";
+    private JComboBox comboBoxProvince;
+    private JComboBox comboBoxCity;
+    private String ans1;
+    private String ans2;
 
     
     public UpdateRestaurantDetails (final String id){
@@ -107,8 +111,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
         lblId = new JLabel("Id");
         lblPass = new JLabel("Password");
         lblRole = new JLabel ("Role");
-        lblName = new JLabel ("Enter First Name");
-        lblLastName = new JLabel ("Enter Last Name");
+        lblName = new JLabel ("Enter Restaurant Name");
         lblStreetName = new JLabel ("Enter Street Address");
         lblCity = new JLabel ("Enter City");
         lblProvince = new JLabel ("Enter Province");
@@ -120,33 +123,128 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
         lblAns1 = new JLabel ("Answer*");
         lblAns2 = new JLabel ("Answer*");
         
+        try {
+            Socket socketGetRestaurantDetails = new Socket("localHost", 8000);
+            DataInputStream dataFromServer = new DataInputStream(socketGetRestaurantDetails.getInputStream());
+            DataOutputStream dataToServer = new DataOutputStream (socketGetRestaurantDetails.getOutputStream());
+
+            dataToServer.writeInt(11);
+            dataToServer.writeUTF(id);
+            ans1 = dataFromServer.readUTF();
+            ans2 = dataFromServer.readUTF(); 
+            socketGetRestaurantDetails.close();
+        } catch (IOException ex) {
+            Logger.getLogger(UpdateRestaurantDetails.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         comboBoxSq1 = new JComboBox(sq1);
         comboBoxSq2 = new JComboBox(sq2);
+        comboBoxProvince = new JComboBox();
+        comboBoxCity = new JComboBox();
+       //populating state combo box
+         try {
+            db = new DBConnection();
+            System.out.println("hello");
+            rs = db.getInfo("select distinct state from jfood_cities");
+            System.out.println("ends");
+            comboBoxProvince.addItem("Select State");   
+            comboBoxCity.addItem("Select City");   
+            while(rs.next()){
+            comboBoxProvince.addItem(rs.getString(1));
+            }
+            comboBoxProvince.setSelectedItem(LoginForm.restaurantOwner.getProvince());
+        } catch (SQLException ex) {
+            System.out.println("Error in customerRegistration "+ex.getMessage());
+        }
         
-        txtAns1 = new JTextField ();
-        txtAns2 = new JTextField ();
-        
+        comboBoxProvince.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                db = new DBConnection();  
+                if(comboBoxProvince.getSelectedIndex() == 0){
+                comboBoxCity.removeAllItems();
+                comboBoxCity.addItem("Select city");
+               }else{
+                try {       
+                    rs = db.getInfo("select city from jfood_cities where state = '"+comboBoxProvince.getSelectedItem().toString()+"'");
+                    comboBoxCity.removeAllItems();   
+                    //cmbCity.addItem("select city");
+                    while(rs.next()){
+                        comboBoxCity.addItem(rs.getString(1));
+                    }
+                    comboBoxCity.setSelectedItem(LoginForm.restaurantOwner.getCity());
+                    }  catch (SQLException ex) {
+                    System.out.println("Error in item listener of cmState "+ex.getMessage());
+                }
+            }
+            }
+        }); 
+         
+        txtAns1 = new JTextField (ans1);
+        txtAns2 = new JTextField (ans2);
         
         txtId = new JTextField(id);
         txtId.setPreferredSize(new Dimension (280, 28));
-        txtId.setEditable(false);
-        txtPass = new JTextField();
-        
-        txtRole = new JTextField(); 
+        txtId.setEditable(false);    
+        txtPass = new JTextField(LoginForm.restaurantOwner.getPassword());      
+        txtRole = new JTextField(LoginForm.restaurantOwner.getRole()); 
         txtRole.setEditable(false);
-        
-        txtName = new JTextField ();
-        txtStreetName = new JTextField ();
-        txtCity = new JTextField ();
-        txtProvince = new JTextField ();
-        txtPostalCode = new JTextField ();
-        txtPhone = new JTextField ();
-        txtEmail = new JTextField ();
+        txtName = new JTextField (LoginForm.restaurantOwner.getName());
+        txtStreetName = new JTextField (LoginForm.restaurantOwner.getStreetAddress());
+        txtPostalCode = new JTextField (LoginForm.restaurantOwner.getPostalCode());
+        txtPhone = new JTextField (LoginForm.restaurantOwner.getPhone());
+        txtEmail = new JTextField (LoginForm.restaurantOwner.getEmail());
         
         
         //Update button! 
         btnUpdate = new JButton ("Update");
+        
+        btnUpdate.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) 
+        {
+                
+                String password = txtPass.getText();
+                String name = txtName.getText();
+                String streetAdd = txtStreetName.getText();
+                String city = txtCity.getText();
+                String province = txtProvince.getText();
+                String postalCode = txtPostalCode.getText();
+                String email = txtEmail.getText();
+                String phone = txtPhone.getText();
+                String sq1 = (String) comboBoxSq1.getSelectedItem();
+                String ans1 = txtAns1.getText();
+                String sq2 = (String) comboBoxSq2.getSelectedItem();;
+                String ans2 = txtAns2.getText();
+                if(password.trim().isEmpty() ||name.trim().isEmpty() ||streetAdd.trim().isEmpty() ||
+                        city.trim().isEmpty() ||province.trim().isEmpty() ||postalCode.trim().isEmpty() ||email.trim().isEmpty() ||
+                        phone.trim().isEmpty() ||ans1.trim().isEmpty() ||ans2.trim().isEmpty() )
+                {
+                    JOptionPane.showMessageDialog(null,"All fields here are Mandatory","Fields Empty",JOptionPane.ERROR_MESSAGE);
+                }
+                else 
+                {
+                    LoginForm.restaurantOwner.setPassword(password);
+                    LoginForm.restaurantOwner.setName(name);
+                    LoginForm.restaurantOwner.setStreetAddress(streetAdd);
+                    LoginForm.restaurantOwner.setCity(city);
+                    LoginForm.restaurantOwner.setProvince(province);
+                    LoginForm.restaurantOwner.setPostalCode(postalCode);
+                    LoginForm.restaurantOwner.setEmail(email);
+                    LoginForm.restaurantOwner.setPhone(phone);
+                    //db.UpdateCustomerInfo(id, password, name, streetAdd, city, province, postalCode, email, phone);
+                    //db.UpdateSecurityInfo(id, password, sq1, ans1, sq2, ans2);
+                    System.out.println("Update Complete");
+                    System.out.println(password);
+                    System.out.println(email);
+                    db.closeConnection();
+                    new ThankUForUpdatingDetails(id);
+                    UpdateRestaurantDetails.this.dispose();
+            }             
+        }
+    });
         
         //PanelCenterInside to hold the Labels and TextFields
         panelCenterInside1 = new JPanel ();
@@ -178,13 +276,13 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
         g.gridx = 1; g.gridy = 4; 
         panelCenterInside1.add(txtStreetName, g);
         g.gridx = 0; g.gridy = 5; 
-        panelCenterInside1.add(lblCity, g);
-        g.gridx = 1; g.gridy = 5; 
-        panelCenterInside1.add(txtCity, g);
-        g.gridx = 0; g.gridy = 6; 
         panelCenterInside1.add(lblProvince, g);
+        g.gridx = 1; g.gridy = 5; 
+        panelCenterInside1.add(comboBoxProvince, g);
+        g.gridx = 0; g.gridy = 6; 
+        panelCenterInside1.add(lblCity, g);
         g.gridx = 1; g.gridy = 6; 
-        panelCenterInside1.add(txtProvince, g);
+        panelCenterInside1.add(comboBoxCity, g);
         g.gridx = 0; g.gridy = 7; 
         panelCenterInside1.add(lblPostalCode, g);
         g.gridx = 1; g.gridy = 7; 
@@ -221,7 +319,6 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
         panelCenter = new JPanel ();
         panelCenter.setLayout(new BorderLayout ());
         panelCenter.add(panelCenterInside1, BorderLayout.CENTER);
-        panelCenter.add(panelCenterInside2, BorderLayout.SOUTH);
-        
+        panelCenter.add(panelCenterInside2, BorderLayout.SOUTH);      
     }
 }

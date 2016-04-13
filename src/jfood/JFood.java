@@ -13,7 +13,11 @@ public class JFood {
         WelcomeScreen w1 = new WelcomeScreen();
         //ConfirmRole c = new ConfirmRole();
         //new Customer_UpdateDetails("mazhar");
+<<<<<<< Updated upstream
         
+=======
+        //new UpdateRestaurantDetails("hakka1");
+>>>>>>> Stashed changes
         
     }
     
