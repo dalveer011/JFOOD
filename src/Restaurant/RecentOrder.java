@@ -31,8 +31,8 @@ private JPanel panelCentre;
 private int orderNo;
 private String restId;
 private ArrayList showButtons,doneButtons,lblOrderNum;
-public RecentOrder(String restId) {
-    this.restId = restId;
+public RecentOrder(String restauranttId) {
+    restId = restauranttId;
         this.initComponents();
         for(int i=0;i<showButtons.size();i++){
         JButton sh = (JButton)showButtons.get(i);
@@ -50,56 +50,7 @@ public RecentOrder(String restId) {
         this.add(panelCentre,BorderLayout.CENTER);
         this.setJMenuBar(restMenuBar());
         this.setVisible(true);
-}
-private void initComponents() {
-    try {
-        showButtons = new ArrayList();
-        doneButtons = new ArrayList();
-        lblOrderNum = new ArrayList();
-        panelCentre = new JPanel(new GridLayout(0,3));
-        db = new DBConnection();
-        rs = db.getInfo("select orderNum from orders_jfood where status = 0 and restaurantId = '"+this.restId+"'");
-        while(rs.next()) {
-            orderNo = rs.getInt(1);
-            final JLabel orderNum = new JLabel();
-            orderNum.setText(Integer.toString(orderNo));
-             lblOrderNum.add(orderNum);
-            JButton orderShow = new JButton("Show Order");
-             panelCentre.add(orderShow);
-             orderShow.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("orderButton presses with order nu"+orderNo);
-                    OrderInformationTwo a = new OrderInformationTwo(Integer.parseInt(orderNum.getText()));
-                    a.setVisible(true);
-                }
-            });
-             showButtons.add(orderShow);
-             JButton orderDone = new JButton("Done with order");
-               orderDone.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-               int dr = JOptionPane.showConfirmDialog(null,"Is order is ready to deliever to customer ? ", "order Done confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-               if(dr == JOptionPane.YES_OPTION){
-                   try {
-                       db = new DBConnection();
-                       db.updateOrder(Integer.parseInt(orderNum.getText()));
-                       panelCentre.validate();
-                   } catch (SQLException ex) {
-                               JOptionPane.showMessageDialog(null,"Error occured in recent orders in action listener of orderDone button"+ex.getMessage(), "null", JOptionPane.ERROR_MESSAGE);
-                   }
-               }
-                }
-            });
-               doneButtons.add(orderDone);
-            
-        }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null,"Error occured in recent orders init"+ex.getMessage(), "null", JOptionPane.INFORMATION_MESSAGE);
-    }
- addItem.addActionListener
+         addItem.addActionListener
         (
                 new ActionListener ()
             {
@@ -150,6 +101,56 @@ private void initComponents() {
             }                
             }
         );
+}
+private void initComponents() {
+    try {
+        showButtons = new ArrayList();
+        doneButtons = new ArrayList();
+        lblOrderNum = new ArrayList();
+        panelCentre = new JPanel(new GridLayout(0,3));
+        db = new DBConnection();
+        rs = db.getInfo("select orderNum from orders_jfood where status = 0 and restaurantId = '"+this.restId+"'");
+        while(rs.next()) {
+            orderNo = rs.getInt(1);
+            final JLabel orderNum = new JLabel();
+            orderNum.setText(Integer.toString(orderNo));
+             lblOrderNum.add(orderNum);
+            JButton orderShow = new JButton("Show Order");
+             panelCentre.add(orderShow);
+             orderShow.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("orderButton presses with order nu"+orderNo);
+                    OrderInformationTwo a = new OrderInformationTwo(Integer.parseInt(orderNum.getText()));
+                    a.setVisible(true);
+                }
+            });
+             showButtons.add(orderShow);
+             JButton orderDone = new JButton("Done with order");
+               orderDone.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+               int dr = JOptionPane.showConfirmDialog(null,"Is order is ready to deliever to customer ? ", "order Done confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+               if(dr == JOptionPane.YES_OPTION){
+                   try {
+                       db = new DBConnection();
+                       db.updateOrder(Integer.parseInt(orderNum.getText()));
+                       panelCentre.validate();
+                   } catch (SQLException ex) {
+                               JOptionPane.showMessageDialog(null,"Error occured in recent orders in action listener of orderDone button"+ex.getMessage(), "null", JOptionPane.ERROR_MESSAGE);
+                   }
+               }
+                }
+            });
+               doneButtons.add(orderDone);
+            
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null,"Error occured in recent orders init"+ex.getMessage(), "null", JOptionPane.INFORMATION_MESSAGE);
+    }
+
 }
 
 }

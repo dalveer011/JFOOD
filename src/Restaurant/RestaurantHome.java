@@ -41,6 +41,7 @@ this.add(HeaderFooter.getFooter(new JLabel(new ImageIcon(getClass().getResource(
 this.add(center,BorderLayout.CENTER);
 //addign menuBar
 this.setJMenuBar(restMenuBar());
+this.setVisible(true);
 DBConnection db = new DBConnection();
 ResultSet rs = db.getInfo("select count(status) from orders_jfood where status = 0 and restaurantid = '"+restId+"' group by restaurantid");
     try {
@@ -106,8 +107,8 @@ ResultSet rs = db.getInfo("select count(status) from orders_jfood where status =
         );
 //Adding Tool Bar
 this.add(this.getRestaurantToolBar(),BorderLayout.EAST);
-this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-this.setVisible(true);
+this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
 
         tbBtnAdd.addActionListener
         (
