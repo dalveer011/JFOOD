@@ -17,6 +17,9 @@ import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.DBConnection;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
 
@@ -59,6 +62,7 @@ public class AddNewItems extends RestaurantMenuBar{
                 String price = txtPrice.getText();
                 String cat = category.getSelectedItem().toString();
                 
+                //double price1 = Double.parseDouble(price);
                 if(restid.trim().isEmpty()||itemnum.trim().isEmpty()||itemDesc.trim().isEmpty()||cat.trim().isEmpty()||price.trim().isEmpty())
                 {
                     JOptionPane.showMessageDialog(null,"Fields cannot be empty","Attention",JOptionPane.WARNING_MESSAGE);
@@ -66,28 +70,36 @@ public class AddNewItems extends RestaurantMenuBar{
                 else
                 
                 {
+                    
                    db = new DBConnection();
                     try {
-                        db.addNewItems(itemnum, restid, cat, itemDesc, price);
-                        JOptionPane.showMessageDialog(null, "Item Added", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (SQLException ex) {
-                        JOptionPane.showConfirmDialog(null,"An item already exists with the given id","Attention",JOptionPane.WARNING_MESSAGE);
-                        JOptionPane.showMessageDialog(null,"Item couldnot be added");
+                        Socket socketAdditems = new Socket("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketAdditems.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream (socketAdditems.getOutputStream());
                         
-                    }
-                   
-                   
-                   
-                   
-                   
-                       
-                    db.closeConnection();
-                    System.out.println("Connection closed");
-                    new RestaurantHome(id);
-                    AddNewItems.this.dispose();
-                    
-                }
-                    }
+                        dataToServer.writeInt(8);
+                        dataToServer.writeUTF(itemnum);
+                        dataToServer.writeUTF(restid);
+                        dataToServer.writeUTF(cat);
+                        dataToServer.writeUTF(itemDesc);
+                        dataToServer.writeUTF(price);
+                        
+                        boolean checkAdded = dataFromServer.readBoolean();
+                        
+                        if (checkAdded){
+                            JOptionPane.showMessageDialog(null, "Item Added", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            new RestaurantHome(id);
+                            AddNewItems.this.dispose();
+                        }else{
+                            JOptionPane.showConfirmDialog(null,"An item already exists with the given id","Attention",JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(null,"Item couldnot be added");
+                        }
+                        socketAdditems.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(AddNewItems.class.getName()).log(Level.SEVERE, null, ex);
+                    }          
+            }
+        }
             
      });
         
