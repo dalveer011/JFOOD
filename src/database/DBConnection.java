@@ -359,6 +359,15 @@ public class DBConnection {
         }
 
 }
+    public void updateOrder(int orderNum) throws SQLException
+    {
+     String updateOrders = "update orders_jfood set status=? where orderNum = ?";  
+     stmt = conn.prepareStatement(updateOrders);
+     stmt.setInt(1,1);
+     stmt.setInt(2,orderNum);
+     stmt.executeUpdate();
+     
+    }
 }
 
 
