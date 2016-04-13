@@ -129,40 +129,7 @@ public class DBConnection {
     }
     
     
-//    public void addRestaurantInfo (String restaurantId, String pass, String role, String name, 
-//            String streetAdd, String city,
-//            String province, String postalCode, 
-//            String email, String phone)
-//    {
-//<<<<<<< HEAD
-//        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (RESTAURANTID, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
-//=======
-//        String addRegistrationInfo = "INSERT INTO RESTAURANTOWNERS_JFOOD (restaurantId, PASSWORD, ROLE, NAME, ADDRESS, CITY, PROVINCE, POSTALCODE, EMAIL, PHONE) " + 
-//>>>>>>> origin/master
-//                " VALUES (?,?,?,?,?,?,?,?,?,?)";
-//                
-//        try {
-//            conn.setAutoCommit(false);
-//            stmt = conn.prepareStatement(addRegistrationInfo);
-//            stmt.setString(1, restaurantId);
-//            stmt.setString(2, pass);
-//            stmt.setString(3, role);
-//            stmt.setString(4, name);
-//            stmt.setString(5, streetAdd);
-//            stmt.setString(6, city);
-//            stmt.setString(7, province);
-//            stmt.setString(8, postalCode);
-//            stmt.setString(9, email);
-//            stmt.setString(10, phone);
-//            
-//            stmt.executeQuery();
-//            conn.commit();
-//            
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Registration Table", JOptionPane.INFORMATION_MESSAGE);
-//        }
-//    }
-    
+
     public void addCustomerInfo (String loginId, String pass, String role, String fName, 
             String lName, String streetAdd, String city,
             String province, String postalCode, 
@@ -259,7 +226,7 @@ public class DBConnection {
         return rs;
     }
    
-   public void addNewItems(String itemnum,String restid ,String category , String itemDesc,String price) throws SQLException
+   public void addNewItems(String itemnum,String restid ,String category , String itemDesc,double price) throws SQLException
     {
         String addNewItems = "insert into menu_items_jfood(itemnum,restaurantid,category,item_description,price)values(?,?,?,?,?)";
        
@@ -269,18 +236,18 @@ public class DBConnection {
             stmt.setString(2, restid);
             stmt.setString(3,category);
             stmt.setString(4,itemDesc);
-            stmt.setString(5,price);
+            stmt.setDouble(5,price);
             stmt.executeQuery();
             conn.commit();   
     }
     
-    public void updateItems(String itemnum,String restid ,String category , String itemDesc,String price) throws SQLException
+    public void updateItems(String itemnum,String restid ,String category , String itemDesc,double price) throws SQLException
     {
      String updateItems = "update menu_items_jfood set price=? where itemnum = ?";  
      
      conn.setAutoCommit(false);
      stmt = conn.prepareStatement(updateItems);
-     stmt.setString(1,price);
+     stmt.setDouble(1,price);
      stmt.setString(2,itemnum);
      stmt.addBatch();
      stmt.executeBatch();

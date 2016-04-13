@@ -24,6 +24,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import database.DBConnection;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
 
@@ -69,90 +72,55 @@ public class DeleteItems extends RestaurantMenuBar {
          public void actionPerformed(ActionEvent e) {  
              
                  String rid = id;
-                 String inum = txtItemNum.getText();
+                 String inum = txtItemNum.getText().toUpperCase();
                  String icat = category.getSelectedItem().toString();
+                 
+                 
+                 
                  if(inum.trim().isEmpty()) {
                  JOptionPane.showMessageDialog(null, "Item num field can not be left blank", "Empty field",JOptionPane.WARNING_MESSAGE);
                  }
                  else {
                  
-                 //String idesc = txtItemDesc.getText();
-//                File c = new File("addItems.txt");
-//                File addItem = new File("addItems.txt");
-//                File temp = new File("temp.txt");
-//                
-//                DataInputStream dis = new DataInputStream(new FileInputStream(addItem));
-//                DataOutputStream dos = new DataOutputStream(new FileOutputStream(temp,true));
-//                int count = 0;  //If no such item exists
-//                while(dis.available() > 0)
-//                {
-//                    String restid = dis.readUTF();
-//                    String itemnum = dis.readUTF();
-//                    String cat = dis.readUTF();     
-//                if(restid.equals(rid)&inum.equals(itemnum)&cat.equals(icat))
-//                {
-//                     for(int j=1;j <= 2;j++)
-//                    {
-//                        dis.readUTF();
-//                    }
-//                     count++;
-//                }else{
-//                dos.writeUTF(restid);
-//                dos.writeUTF(itemnum);
-//                dos.writeUTF(cat);
-//                 dos.writeUTF(dis.readUTF());
-//                 dos.writeUTF(dis.readUTF());
-//                }
-//                }
-//                if(count > 0) {
-//                JOptionPane.showMessageDialog(null, "Deleted", "Choices",JOptionPane.INFORMATION_MESSAGE);
-//                }else {
-//                JOptionPane.showMessageDialog(null, "Item not found in your restaurant Menu", "Item not Found",JOptionPane.ERROR_MESSAGE);
-//                }
-//                dos.close();
-//                dis.close();
-//               if(addItem.delete())
-//                         System.out.println("deleted");
-//                if(temp.renameTo(c))
-//                         System.out.println("Renamed");
-//                 }
-//                 }catch (FileNotFoundException ex) {
-//                System.out.println("File not found");
-//            }       catch (IOException ex) {
-//                     System.out.println("error");        
-//            }
-//            txtItemNum.setText("");
               try {
-                         db = new DBConnection();
-                         String query = "select itemnum,restaurantid,category,item_description,price from menu_items_jfood";
-                         boolean check = true;
-                         rsDeleteItem=db.getInfo(query);
-                         
-                         
-                            while(rsDeleteItem.next())
-                            {
-                             if(rsDeleteItem.getString(1).equals(inum))
-                             {
-                               rsDeleteItem.deleteRow();
-                             //db.deleteItems(inum);
-                              check = false;
-                             JOptionPane.showMessageDialog(null,"Item Deleted","Success",JOptionPane.INFORMATION_MESSAGE);
-                             
-                             }
-                             
-                            }
+                        Socket socketDeleteitems = new Socket("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketDeleteitems.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream (socketDeleteitems.getOutputStream());
+                        
+                        dataToServer.writeInt(10);
+                        dataToServer.writeUTF(rid);
+                        dataToServer.writeUTF(inum);
+                        dataToServer.writeUTF(icat);
+                        
+                        boolean check = dataFromServer.readBoolean();
+                        if(check)
+                        {
+                        JOptionPane.showMessageDialog(null,"Item Deleted","Success",JOptionPane.INFORMATION_MESSAGE);
+                        int option = JOptionPane.showConfirmDialog(null,"Do you want to delete more items","Attention",JOptionPane.YES_NO_OPTION);
+                        
+                        if(option==0)
+                        {
+                            new DeleteItems(id);  
+                            DeleteItems.this.dispose();
+                        }
+                        else
+                        {
+                            new RestaurantHome(id);
                             
-                             if(check)
-                             {
-                             JOptionPane.showMessageDialog(null,"No items to delete with provided item num","Attention",JOptionPane.WARNING_MESSAGE);
-                             }
-                            
-                         
-                         db.closeConnection();
-                         
-                         
-                     } catch (SQLException ex) {
-                         JOptionPane.showMessageDialog(null,"Failed to delete","Attention", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        }
+                        
+                        else
+                        {
+                          JOptionPane.showMessageDialog(null,"No items to delete with provided item num","Attention",JOptionPane.WARNING_MESSAGE);
+                          JOptionPane.showMessageDialog(null,"Item could not be deleted","Attention",JOptionPane.WARNING_MESSAGE);
+
+                        }
+                        
+                        socketDeleteitems.close();
+         
+                     } catch (IOException ex) {
+                         Logger.getLogger(DeleteItems.class.getName()).log(Level.SEVERE, null, ex);
                      }
                
                

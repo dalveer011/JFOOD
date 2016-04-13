@@ -27,7 +27,7 @@ public class AddNewItems extends RestaurantMenuBar{
     
     private JLabel lblrestId,lblItemNum,lblItemDesc,lblCategory,lblCost,lblHeading,lblCopyRight,imgWest;
     private JTextField txtRestId,txtItemNum,txtItemDesc,txtPrice;
-    private JButton confirm,reset;
+    private JButton confirm,viewInfo;
     private JComboBox category;
     private JPanel PanelCenter;
     private DataOutputStream inFile;
@@ -57,21 +57,26 @@ public class AddNewItems extends RestaurantMenuBar{
             public void actionPerformed(ActionEvent e) {
 
                 String restid = txtRestId.getText();
-                String itemnum = txtItemNum.getText();
+                String itemnum = txtItemNum.getText().toUpperCase();
                 String itemDesc = txtItemDesc.getText();
                 String price = txtPrice.getText();
                 String cat = category.getSelectedItem().toString();
                 
-                //double price1 = Double.parseDouble(price);
+                
                 if(restid.trim().isEmpty()||itemnum.trim().isEmpty()||itemDesc.trim().isEmpty()||cat.trim().isEmpty()||price.trim().isEmpty())
                 {
                     JOptionPane.showMessageDialog(null,"Fields cannot be empty","Attention",JOptionPane.WARNING_MESSAGE);
+                }
+                else if(!price.matches("^[0-9]+(\\.[0-9]{1,2})?$"))
+                {
+                    JOptionPane.showMessageDialog(null,"Wrong format for price. has to be xxxxx.xx","Attention",JOptionPane.WARNING_MESSAGE);
+                    txtPrice.setText("");
                 }
                 else
                 
                 {
                     
-                   db = new DBConnection();
+                   double price1 = Double.parseDouble(price);
                     try {
                         Socket socketAdditems = new Socket("localHost", 8000);
                         DataInputStream dataFromServer = new DataInputStream(socketAdditems.getInputStream());
@@ -82,19 +87,32 @@ public class AddNewItems extends RestaurantMenuBar{
                         dataToServer.writeUTF(restid);
                         dataToServer.writeUTF(cat);
                         dataToServer.writeUTF(itemDesc);
-                        dataToServer.writeUTF(price);
+                        dataToServer.writeDouble(price1);
                         
                         boolean checkAdded = dataFromServer.readBoolean();
                         
                         if (checkAdded){
                             JOptionPane.showMessageDialog(null, "Item Added", "Success", JOptionPane.INFORMATION_MESSAGE);
-                            new RestaurantHome(id);
-                            AddNewItems.this.dispose();
+                            int option =  JOptionPane.showConfirmDialog(null,"Do you want to add more items","Attention",JOptionPane.YES_NO_OPTION);
+                            if(option==0)
+                            {
+                                new AddNewItems(id);
+                                AddNewItems.this.dispose();
+                                
+                            }
+                            else
+                            {
+                                new RestaurantHome(id);
+                                AddNewItems.this.dispose();
+                            }
+                            
                         }else{
                             JOptionPane.showConfirmDialog(null,"An item already exists with the given id","Attention",JOptionPane.WARNING_MESSAGE);
                             JOptionPane.showMessageDialog(null,"Item couldnot be added");
                         }
                         socketAdditems.close();
+                        
+                        
                     } catch (IOException ex) {
                         System.out.println(ex.getMessage());
                     }          
@@ -103,17 +121,11 @@ public class AddNewItems extends RestaurantMenuBar{
             
      });
         
-        reset.addActionListener(new ActionListener() {
+        viewInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource()==reset)
-                {
-                    
-                    JOptionPane.showMessageDialog(null,"Reset","Reset",JOptionPane.INFORMATION_MESSAGE);
-                    AddNewItems.this.dispose();
-                    new AddNewItems(id);
-                    
-                }
+                String restName = txtRestId.getText();
+               ViewInformation v1 = new ViewInformation(restName);
             }
         });  
         
@@ -272,7 +284,7 @@ public class AddNewItems extends RestaurantMenuBar{
         txtPrice = new JTextField();
         
         confirm = new JButton("Add Item");
-        reset = new JButton("Reset");
+        viewInfo = new JButton("View Info");
         
         
         String [] catlist = {"Rice","Noodles","Chicken","Fish","Dessert","Entree","Soup","Salad", "Breakfast", "Dinner", "Mains", "Entree"};
@@ -290,6 +302,6 @@ public class AddNewItems extends RestaurantMenuBar{
         PanelCenter.add(lblCost);
         PanelCenter.add(txtPrice);
         PanelCenter.add(confirm);
-        PanelCenter.add(reset); 
+        PanelCenter.add(viewInfo); 
     }
 }

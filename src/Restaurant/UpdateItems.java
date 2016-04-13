@@ -70,7 +70,7 @@ public class UpdateItems extends RestaurantMenuBar{
             public void actionPerformed(ActionEvent e) {
                 
                String restid = txtRestId.getText();
-                String itemnum = txtItemNum.getText();
+                String itemnum = txtItemNum.getText().toUpperCase();
                 String itemDesc = txtItemDesc.getText();
                 String price = txtPriceNew.getText();
                 String cat = category.getSelectedItem().toString();
@@ -79,9 +79,14 @@ public class UpdateItems extends RestaurantMenuBar{
                 {
                     JOptionPane.showMessageDialog(null,"Fields cannot be empty","Attention",JOptionPane.WARNING_MESSAGE);
                 }
+                 else if(!price.matches("^[0-9]+(\\.[0-9]{1,2})?$"))
+                {
+                    JOptionPane.showMessageDialog(null,"Wrong format for price. has to be xxxxx.xx","Attention",JOptionPane.WARNING_MESSAGE);
+                    txtPriceNew.setText("");
+                }
                 else
                 {
-                
+                double price1 = Double.parseDouble(price);
                    try {
                         Socket socketUpdateitems = new Socket("localHost", 8000);
                         DataInputStream dataFromServer = new DataInputStream(socketUpdateitems.getInputStream());
@@ -92,16 +97,17 @@ public class UpdateItems extends RestaurantMenuBar{
                         dataToServer.writeUTF(restid);
                         dataToServer.writeUTF(cat);
                         dataToServer.writeUTF(itemDesc);
-                        dataToServer.writeUTF(price);
+                        dataToServer.writeDouble(price1);
                        
                         boolean check = dataFromServer.readBoolean();
                         if(check)
                         {
                             JOptionPane.showMessageDialog(null, "Item Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
-                           int option =  JOptionPane.showConfirmDialog(null,"Do you want to update more items","Attention",JOptionPane.OK_CANCEL_OPTION);
+                           int option =  JOptionPane.showConfirmDialog(null,"Do you want to update more items","Attention",JOptionPane.YES_NO_OPTION);
                             if(option==0)
                             {
                                 new UpdateItems(id);
+                                UpdateItems.this.dispose();
                                 
                             }
                             else
