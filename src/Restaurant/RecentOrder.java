@@ -48,7 +48,16 @@ public RecentOrder(String restauranttId) {
         this.setJMenuBar(restMenuBar());
         this.setVisible(true);
         
-         
+         gotoHome.addActionListener(new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new RestaurantHome (restId);
+                RecentOrder.this.dispose();
+            }                
+            }
+        );
         
          addItem.addActionListener
         (
