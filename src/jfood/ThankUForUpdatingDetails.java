@@ -14,7 +14,7 @@ import java.awt.*;
  *
  * @author Mazhar
  */
-public class ThankUForUpdatingDetails extends MenuCustomer {
+public class ThankUForUpdatingDetails extends JFrame {
     private JLabel lblThanks,img;
     private JButton btnContinue, btnExit;
     private JPanel panelCenterInside1, panelCenterInside2, panelCenterInside3,

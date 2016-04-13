@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  *
  * @author Mazhar
  */
-public class LogOut extends MenuCustomer {
+public class LogOut extends JFrame {
     private JLabel lblLogOut, lblLogo;
     private JButton btnContinue, btnExit;
     private JPanel panelCenter, panelCenterInside1, panelCenterInside2, panelCenterNorth, panelCenterMiddle, panelCenterSouth;
