@@ -65,11 +65,11 @@ public class CustomerRegistration extends JFrame {
 
             @Override
             public void itemStateChanged(ItemEvent e) {
-               conn = new DBConnection();  
+                conn = new DBConnection();  
                 if(comboBoxProvince.getSelectedIndex() == 0){
-               cmbCity.removeAllItems();
-               cmbCity.addItem("Select city");
-               }else{
+                cmbCity.removeAllItems();
+                cmbCity.addItem("Select city");
+                }else{
                 try {       
                     rs = conn.getInfo("select city from jfood_cities where state = '"+comboBoxProvince.getSelectedItem().toString()+"'");
                     cmbCity.removeAllItems();   
@@ -150,11 +150,11 @@ public class CustomerRegistration extends JFrame {
         
         try {
             conn =new DBConnection();
-              System.out.println("hello");
-              rs = conn.getInfo("select distinct state from jfood_cities");
-              System.out.println("ends");
-              comboBoxProvince.addItem("Select State");   
-              cmbCity.addItem("Select City");   
+            System.out.println("hello");
+            rs = conn.getInfo("select distinct state from jfood_cities");
+            System.out.println("ends");
+            comboBoxProvince.addItem("Select State");   
+            cmbCity.addItem("Select City");   
             while(rs.next()){
             comboBoxProvince.addItem(rs.getString(1));
             }

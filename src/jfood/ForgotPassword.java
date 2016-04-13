@@ -15,6 +15,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -62,29 +66,54 @@ public class ForgotPassword extends JFrame {
         this.add(HeaderFooter.getFooter(new JLabel(new ImageIcon(getClass().getResource("images/copyright.png")))), BorderLayout.SOUTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        
-        db = new DBConnection();
-        rs = db.getInfo(query);
-        
         txtEnterId.setText(id);
         txtEnterId.setEditable(false);
         
-        try {
-            while (rs.next()){
-                if (id.equals(rs.getString(1))){
-                    txtQues1.setText(rs.getString(3));
-                    txtQues2.setText(rs.getString(5));
-                    password = rs.getString(2);
-                    
-                    ans1 = rs.getString(4);
-                    ans2 = rs.getString(6);
-                }
-            }
-        } catch (SQLException ex) {
+//        db = new DBConnection();
+//        rs = db.getInfo(query);
+//
+//        
+//        try {
+//            while (rs.next()){
+//                if (id.equals(rs.getString(1))){
+//                    txtQues1.setText(rs.getString(3));
+//                    txtQues2.setText(rs.getString(5));
+//                    password = rs.getString(2);
+//                    
+//                    ans1 = rs.getString(4);
+//                    ans2 = rs.getString(6);
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ForgotPassword.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
+            try {
+            Socket socketfbPassScreen = new Socket ("localHost", 8000);
+            DataInputStream dataFromServer = new DataInputStream(socketfbPassScreen.getInputStream());
+            DataOutputStream dataToServer = new DataOutputStream (socketfbPassScreen.getOutputStream());
+            
+            dataToServer.writeInt(7); //Process Id for Retreiving secQues1 and answes along with passwrd | Forgot Password Screen
+            
+            System.out.println(id);
+            dataToServer.writeUTF(id);
+            
+            password = dataFromServer.readUTF();
+            String Ques1 = dataFromServer.readUTF();
+            ans1 = dataFromServer.readUTF();
+            String Ques2 = dataFromServer.readUTF();
+            ans2 = dataFromServer.readUTF();
+            txtQues1.setText(Ques1);
+            txtQues2.setText(Ques2);
+            
+            socketfbPassScreen.close();
+        } catch (IOException ex) {
             Logger.getLogger(ForgotPassword.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-       submit.addActionListener(new ActionListener() {
+            
+            
+        submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String userAns1 = txtAns1.getText();
@@ -145,13 +174,18 @@ public class ForgotPassword extends JFrame {
         public void actionPerformed(ActionEvent e) {
             int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the application?", 
                     "Exit Application", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (n == JOptionPane.YES_OPTION)
-                    System.exit(0);
+            if (n == JOptionPane.YES_OPTION){
+                if (db != null)
+                db.closeConnection();
+                System.exit(0);
+            }
+                    
             else if (n == JOptionPane.NO_OPTION)
             {}
         }
     });
     }
+    
     private void initComponents()
     {
         

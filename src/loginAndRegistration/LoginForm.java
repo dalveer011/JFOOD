@@ -115,6 +115,7 @@ public class LoginForm extends JFrame{
                             boolean checkfgPass_cus = dataFromServer.readBoolean();
                             if (checkfgPass_cus){
                                 new ForgotPassword(txtEnterId.getText());
+                                socketfgPass.close();
                                 LoginForm.this.dispose();
                             }else{
                                 JOptionPane.showMessageDialog(null, "CustomerId doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
@@ -128,6 +129,7 @@ public class LoginForm extends JFrame{
                             boolean checkfgPass_Rst = dataFromServer.readBoolean();
                             if (checkfgPass_Rst){
                                 new ForgotPassword(txtEnterId.getText());
+                                socketfgPass.close();
                                 LoginForm.this.dispose();
                             }else{
                                 JOptionPane.showMessageDialog(null, "RestaurantId doesn't exist ", "Login Incorrect", JOptionPane.ERROR_MESSAGE);
