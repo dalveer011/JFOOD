@@ -194,7 +194,7 @@ public class DBConnection {
     public void UpdateSecurityInfo (String loginId, String pass, String sq1, String ans1, 
             String sq2, String ans2)
     {
-        String updateQuery = "UPDATE Security_Questions_Jfood1 SET PASSWORD = ?, SECURITY_QUESTION1 = ?, ANSWER_1 = ?, SECURITY_QUESTION2 = ?, "
+        String updateQuery = "UPDATE Security_Questions_Jfood SET PASSWORD = ?, SECURITY_QUESTION1 = ?, ANSWER_1 = ?, SECURITY_QUESTION2 = ?, "
                 + "ANSWER_2 = ? WHERE LOGINID = ?";
         
         try {

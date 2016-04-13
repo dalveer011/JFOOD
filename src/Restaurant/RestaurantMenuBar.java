@@ -64,6 +64,7 @@ updateDetails.add(updateItems);
 logout.add(logOut);
 logout.add(exit);
 
+
 exit.addActionListener(new ActionListener() {
 
         @Override

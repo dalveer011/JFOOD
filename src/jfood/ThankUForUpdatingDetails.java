@@ -24,7 +24,7 @@ public class ThankUForUpdatingDetails extends JFrame {
     public ThankUForUpdatingDetails (String  id){
         this.id = id;
         this.initComponents();
-        this.setTitle("Thank you for the update | " + LoginForm.customer.getFirstName() + " " + LoginForm.customer.getLastName());
+        this.setTitle("Thank you for the update");
         this.setSize(HeaderFooter.WIDTH, HeaderFooter.HEIGHT);
         this.add(HeaderFooter.getHeader(new JLabel(new ImageIcon(getClass().getResource("resources/logo2.png")))), BorderLayout.NORTH);
         this.add(HeaderFooter.getFooter(new JLabel(new ImageIcon(getClass().getResource("images/copyright.png")))), BorderLayout.SOUTH);

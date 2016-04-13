@@ -67,6 +67,15 @@ ResultSet rs = db.getInfo("select count(status) from orders_jfood where status =
             }
         );
         
+        updateAcDetails.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UpdateRestaurantDetails a = new UpdateRestaurantDetails(restId);
+                RestaurantHome.this.dispose();
+            }
+        });
+        
         deleteItem.addActionListener
         (
                 new ActionListener ()

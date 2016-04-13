@@ -209,15 +209,15 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                 String password = txtPass.getText();
                 String name = txtName.getText();
                 String streetAdd = txtStreetName.getText();
-                String city = txtCity.getText();
-                String province = txtProvince.getText();
+                String province = (String)comboBoxProvince.getSelectedItem();
+                String city = (String)comboBoxCity.getSelectedItem();
                 String postalCode = txtPostalCode.getText();
                 String email = txtEmail.getText();
                 String phone = txtPhone.getText();
                 String sq1 = (String) comboBoxSq1.getSelectedItem();
-                String ans1 = txtAns1.getText();
+                String updatedAns1 = txtAns1.getText();
                 String sq2 = (String) comboBoxSq2.getSelectedItem();;
-                String ans2 = txtAns2.getText();
+                String updatedAns2 = txtAns2.getText();
                 if(password.trim().isEmpty() ||name.trim().isEmpty() ||streetAdd.trim().isEmpty() ||
                         city.trim().isEmpty() ||province.trim().isEmpty() ||postalCode.trim().isEmpty() ||email.trim().isEmpty() ||
                         phone.trim().isEmpty() ||ans1.trim().isEmpty() ||ans2.trim().isEmpty() )
@@ -234,17 +234,176 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                     LoginForm.restaurantOwner.setPostalCode(postalCode);
                     LoginForm.restaurantOwner.setEmail(email);
                     LoginForm.restaurantOwner.setPhone(phone);
-                    //db.UpdateCustomerInfo(id, password, name, streetAdd, city, province, postalCode, email, phone);
-                    //db.UpdateSecurityInfo(id, password, sq1, ans1, sq2, ans2);
-                    System.out.println("Update Complete");
-                    System.out.println(password);
-                    System.out.println(email);
-                    db.closeConnection();
-                    new ThankUForUpdatingDetails(id);
-                    UpdateRestaurantDetails.this.dispose();
+                    
+                    try {
+                        Socket updateRstInfo = new Socket ("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(updateRstInfo.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream (updateRstInfo.getOutputStream());
+
+                        dataToServer.writeInt(12); //ProcessId for Updating Restaurant Info.
+                        
+                        dataToServer.writeUTF(id);
+                        dataToServer.writeUTF(password);
+                        dataToServer.writeUTF(name);
+                        dataToServer.writeUTF(streetAdd);
+                        dataToServer.writeUTF(city);
+                        dataToServer.writeUTF(province);
+                        dataToServer.writeUTF(postalCode);
+                        dataToServer.writeUTF(email);
+                        dataToServer.writeUTF(phone);
+                        dataToServer.writeUTF(sq1);
+                        dataToServer.writeUTF(updatedAns1);
+                        dataToServer.writeUTF(sq2);
+                        dataToServer.writeUTF(updatedAns2);
+                        
+                        boolean checkRstUpdated = dataFromServer.readBoolean();
+                        if (checkRstUpdated)
+                        {
+                            System.out.println("Update Complete");
+                            System.out.println(password);
+                            System.out.println(email);
+                            JOptionPane.showMessageDialog(null, "Restaurant details updated", "Update Successful" , JOptionPane.INFORMATION_MESSAGE);
+                            ThankUForUpdatingDetails a = new ThankUForUpdatingDetails(LoginForm.restaurantOwner.getLoginId());
+                            UpdateRestaurantDetails.this.dispose();
+                        }else {
+                            JOptionPane.showMessageDialog(null, "Restaurant details could not be updated", "Update was unsuccessful" , JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(UpdateRestaurantDetails.class.getName()).log(Level.SEVERE, null, ex);
+                    }
             }             
         }
     });
+        
+        //Adding action listener to the menubar!
+        gotoHome.addActionListener
+        (new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new RestaurantHome (id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        addItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new AddNewItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        deleteItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new DeleteItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        updateItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new UpdateItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        logOut.addActionListener
+        (new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new LogOut();
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnAdd.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                AddNewItems a = new AddNewItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+
+        tbBtnDelete.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                DeleteItems a = new DeleteItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnUpdate.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                UpdateItems a = new UpdateItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnLogOut.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LogOut a = new LogOut();
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnResHome.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                RestaurantHome a = new RestaurantHome(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                 
+            
+            }
+        );
         
         //PanelCenterInside to hold the Labels and TextFields
         panelCenterInside1 = new JPanel ();

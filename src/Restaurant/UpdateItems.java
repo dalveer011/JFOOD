@@ -133,8 +133,8 @@ public class UpdateItems extends RestaurantMenuBar{
         btnViewInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                  String restName = txtRestId.getText();
-               ViewInformation v1 = new ViewInformation(restName);
+                String restName = txtRestId.getText();
+                ViewInformation v1 = new ViewInformation(restName);
             }
         });   
         
@@ -272,8 +272,7 @@ public class UpdateItems extends RestaurantMenuBar{
             
             }
         );
-       
-         
+
     }
     
     
