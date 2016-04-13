@@ -29,7 +29,7 @@ public class CheckOut extends MenuCustomer {
 private JPanel center,bottom,centerMain,centreBottom,centerFinal;
 private JTextField totalAmt,orderNum,tax;
 private JButton pay,cancel;
-private double total,price,quantity;
+private double total,price,quantity,totalOrderAmount;
 private ArrayList myList,myCheckBoxes,finalList;
 private String cstid,restId;
     public CheckOut(ArrayList a,final String cstid,final String restId) {
@@ -59,15 +59,15 @@ private String cstid,restId;
         @Override
         public void itemStateChanged(ItemEvent e) {
            if(edit.isSelected()){
-            total = total + (Double.parseDouble(priceNeeded.getText())*Double.parseDouble(quanNeeded.getText()));
-               System.out.println("Total"+total);  
+            totalOrderAmount = totalOrderAmount + (Double.parseDouble(priceNeeded.getText())*Double.parseDouble(quanNeeded.getText()));
+               System.out.println("Total"+totalOrderAmount);  
            }
            else{
-               total = total - (Double.parseDouble(priceNeeded.getText())*Double.parseDouble(quanNeeded.getText()));
+               totalOrderAmount = totalOrderAmount - (Double.parseDouble(priceNeeded.getText())*Double.parseDouble(quanNeeded.getText()));
                
                
            }
-             totalAmt.setText(String.format("%.2f",total));
+             totalAmt.setText(String.format("%.2f",totalOrderAmount));
              Double totalTax = ((Double.parseDouble(totalAmt.getText()) * 13.5)/100);
              tax.setText(String.format("%.2f",totalTax));
         }
@@ -86,13 +86,13 @@ private String cstid,restId;
       
        center.add(d.getTxtItemPrice());
        center.add((JCheckBox)myList.get(i));
-      total =total + (price*quantity);
+      totalOrderAmount =totalOrderAmount + (price*quantity);
         }
-     Double totalTax = ((total * 13.5)/100);
-     total = total + totalTax;
-    centreBottom = new JPanel();
+     Double totalTax = ((totalOrderAmount * 13.5)/100);
+     
+        centreBottom = new JPanel();
         centreBottom.setLayout(new GridBagLayout());
-        totalAmt = new JTextField(String.format("%.2f",total));
+        totalAmt = new JTextField(String.format("%.2f",totalOrderAmount));
         totalAmt.setEditable(false);
         orderNum = new JTextField();
         orderNum.setEditable(false);
@@ -117,7 +117,7 @@ private String cstid,restId;
         g.insets= new Insets(10, 5, 0, 5);
         g.gridx = 0;
         g.gridy = 2;
-        centreBottom.add(new JLabel("Total Amount to be paid"), g);
+        centreBottom.add(new JLabel("Total order Amount to be paid"), g);
         g.gridx = 1;
         g.gridy = 2;
         centreBottom.add(totalAmt, g);
@@ -144,6 +144,7 @@ private String cstid,restId;
                 try {
                     if(rs.next()){
                         double bal = rs.getDouble(1);
+                       total = Double.parseDouble(totalAmt.getText())+Double.parseDouble(tax.getText());
                         if(bal < total) {
                         JOptionPane.showMessageDialog(null,"Please Add money to your wallet","Add money",JOptionPane.INFORMATION_MESSAGE);
                         }else{
@@ -158,6 +159,7 @@ private String cstid,restId;
                            rs.updateDouble(1, bal - total);
                            rs.updateRow();
                             LoginForm.customer.getShoppingList().clear();
+                            HomeCustomer a = new HomeCustomer(LoginForm.customer.getLoginId());
                         }
                     }
                 } catch (SQLException ex) {
