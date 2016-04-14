@@ -100,6 +100,135 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
 
+                //Adding action listener to the menubar!
+        gotoHome.addActionListener
+        (new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new RestaurantHome (id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        addItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new AddNewItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        deleteItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new DeleteItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        updateItem.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new UpdateItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        logOut.addActionListener
+        (new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                new LogOut();
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnAdd.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                AddNewItems a = new AddNewItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+
+        tbBtnDelete.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                DeleteItems a = new DeleteItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnUpdate.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                UpdateItems a = new UpdateItems(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnLogOut.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                LogOut a = new LogOut();
+                UpdateRestaurantDetails.this.dispose();
+            }                
+            }
+        );
+        
+        tbBtnResHome.addActionListener
+        (
+                new ActionListener ()
+            {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                RestaurantHome a = new RestaurantHome(id);
+                UpdateRestaurantDetails.this.dispose();
+            }                 
+            
+            }
+        );
     }
     
     private void initComponents (){
@@ -275,135 +404,6 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
         }
     });
         
-        //Adding action listener to the menubar!
-        gotoHome.addActionListener
-        (new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                new RestaurantHome (id);
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        addItem.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                new AddNewItems(id);
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        deleteItem.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                new DeleteItems(id);
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        updateItem.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                new UpdateItems(id);
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        logOut.addActionListener
-        (new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                new LogOut();
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        tbBtnAdd.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                AddNewItems a = new AddNewItems(id);
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-
-        tbBtnDelete.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                DeleteItems a = new DeleteItems(id);
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        tbBtnUpdate.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                UpdateItems a = new UpdateItems(id);
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        tbBtnLogOut.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                LogOut a = new LogOut();
-                UpdateRestaurantDetails.this.dispose();
-            }                
-            }
-        );
-        
-        tbBtnResHome.addActionListener
-        (
-                new ActionListener ()
-            {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                RestaurantHome a = new RestaurantHome(id);
-                UpdateRestaurantDetails.this.dispose();
-            }                 
-            
-            }
-        );
         
         //PanelCenterInside to hold the Labels and TextFields
         panelCenterInside1 = new JPanel ();
