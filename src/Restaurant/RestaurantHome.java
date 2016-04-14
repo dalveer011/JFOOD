@@ -48,7 +48,13 @@ ResultSet rs = db.getInfo("select count(status) from orders_jfood where status =
         if(rs.next()) {
             int count = rs.getInt(1);
             if(count > 0) 
+            {
                 JOptionPane.showMessageDialog(null,"You have "+count+" recent orders","Recent Order",JOptionPane.INFORMATION_MESSAGE);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,"You have no recent orders","Recent Order",JOptionPane.INFORMATION_MESSAGE);
+            }
         }   
     } catch (SQLException ex) {
         System.out.println("Error in restaurant home constructor"+ex.getMessage());
