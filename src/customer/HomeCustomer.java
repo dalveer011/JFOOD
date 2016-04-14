@@ -80,6 +80,7 @@ public class HomeCustomer extends MenuCustomer {
            while(rs.next()) {
                   final JLabel restName = new JLabel(rs.getString(1));
                          panelCenterBottom.add(new JLabel(rs.getString(2)));
+                         panelCenterBottom.revalidate();
                          JButton go = new JButton("GO");
                          panelCenterBottom.add(go);
                          go.addActionListener(new ActionListener() {

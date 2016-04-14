@@ -135,7 +135,7 @@ public class DisplayItems extends MenuCustomer{
         //panel
         panelCenter = new JPanel (new BorderLayout());
         
-        String a = "resources/" + restId + ".png";
+        String a = "images/logo.png";
         lblLogo = new JLabel(new ImageIcon(getClass().getResource(a)));
         panelCenter.add(lblLogo, BorderLayout.NORTH);
         
