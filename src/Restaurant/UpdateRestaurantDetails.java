@@ -37,7 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import jfood.HeaderFooter;
 import jfood.LogOut;
-import jfood.ThankUForUpdatingDetails;
+import jfood.ThankUForUpdatingDetails_Cus;
 import loginAndRegistration.LoginForm;
 
 /**
@@ -281,7 +281,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
             while(rs.next()){
             comboBoxProvince.addItem(rs.getString(1));
             }
-            comboBoxProvince.setSelectedItem(LoginForm.restaurantOwner.getProvince());
+            comboBoxProvince.setSelectedIndex(0);
         } catch (SQLException ex) {
             System.out.println("Error in customerRegistration "+ex.getMessage());
         }
@@ -293,7 +293,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                 db = new DBConnection();  
                 if(comboBoxProvince.getSelectedIndex() == 0){
                 comboBoxCity.removeAllItems();
-                comboBoxCity.addItem("Select city");
+                comboBoxCity.addItem("Select City");
                }else{
                 try {       
                     rs = db.getInfo("select city from jfood_cities where state = '"+comboBoxProvince.getSelectedItem().toString()+"'");
@@ -302,7 +302,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                     while(rs.next()){
                         comboBoxCity.addItem(rs.getString(1));
                     }
-                    comboBoxCity.setSelectedItem(LoginForm.restaurantOwner.getCity());
+                    comboBoxCity.setSelectedIndex(0);
                     }  catch (SQLException ex) {
                     System.out.println("Error in item listener of cmState "+ex.getMessage());
                 }
@@ -352,8 +352,26 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                         phone.trim().isEmpty() ||ans1.trim().isEmpty() ||ans2.trim().isEmpty() )
                 {
                     JOptionPane.showMessageDialog(null,"All fields here are Mandatory","Fields Empty",JOptionPane.ERROR_MESSAGE);
+                }else if (password.length()>20)
+                {
+                    JOptionPane.showMessageDialog(null, "Password cannot exceed 20 characters"," Login Name | Over limit", JOptionPane.ERROR_MESSAGE);
+                    txtPass.setText("");
+                    txtPass.grabFocus();
+                }else if (!postalCode.matches("^(([A-Za-z][0-9]){3})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Postal Code format must be a#a#a#"," Postal Code | Format mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPostalCode.setText("");
+                    txtPostalCode.grabFocus();
+                }else if (city.equals("Select City") || province.equals("Select Province"))
+                {
+                    JOptionPane.showMessageDialog(null, "Province and City must be selected "," Province & City | Must be Selected", JOptionPane.ERROR_MESSAGE);
+                }else if (!phone.matches("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Please enter a 10 digit phone number. Number format is ###-###-####", "Phone | Mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPhone.setText("");
+                    txtPhone.grabFocus();
                 }
-                else 
+                else
                 {
                     LoginForm.restaurantOwner.setPassword(password);
                     LoginForm.restaurantOwner.setName(name);
@@ -392,7 +410,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                             System.out.println(password);
                             System.out.println(email);
                             JOptionPane.showMessageDialog(null, "Restaurant details updated", "Update Successful" , JOptionPane.INFORMATION_MESSAGE);
-                            ThankUForUpdatingDetails a = new ThankUForUpdatingDetails(LoginForm.restaurantOwner.getLoginId());
+                            ThankUForUpdatingDetails_Rst a = new ThankUForUpdatingDetails_Rst(LoginForm.restaurantOwner.getLoginId());
                             UpdateRestaurantDetails.this.dispose();
                         }else {
                             JOptionPane.showMessageDialog(null, "Restaurant details could not be updated", "Update was unsuccessful" , JOptionPane.INFORMATION_MESSAGE);

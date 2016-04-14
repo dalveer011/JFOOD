@@ -68,7 +68,7 @@ public class CustomerRegistration extends JFrame {
                 conn = new DBConnection();  
                 if(comboBoxProvince.getSelectedIndex() == 0){
                 cmbCity.removeAllItems();
-                cmbCity.addItem("Select city");
+                cmbCity.addItem("Select City");
                 }else{
                 try {       
                     rs = conn.getInfo("select city from jfood_cities where state = '"+comboBoxProvince.getSelectedItem().toString()+"'");
@@ -192,7 +192,31 @@ public class CustomerRegistration extends JFrame {
                     
                     JOptionPane.showMessageDialog(null, "Fields Marked as * can not be left Blank","Can not be Empty", JOptionPane.ERROR_MESSAGE);
 
-                }else
+                }else if (loginId.length()>20)
+                {
+                    JOptionPane.showMessageDialog(null, "Login Name cannot exceed 20 characters"," Login Name | Over limit", JOptionPane.ERROR_MESSAGE);
+                    txtId.setText("");
+                    txtId.grabFocus();
+                }else if (pass.length()>20)
+                {
+                    JOptionPane.showMessageDialog(null, "Password cannot exceed 20 characters"," Login Name | Over limit", JOptionPane.ERROR_MESSAGE);
+                    txtPassword.setText("");
+                    txtPassword.grabFocus();
+                }else if (!postalCode.matches("^(([A-Za-z][0-9]){3})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Postal Code format must be a#a#a#"," Postal Code | Format mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPostalCode.setText("");
+                    txtPostalCode.grabFocus();
+                }else if (city.equals("Select City") || province.equals("Select Province"))
+                {
+                    JOptionPane.showMessageDialog(null, "Province and City must be selected "," Province & City | Must be Selected", JOptionPane.ERROR_MESSAGE);
+                }else if (!phone.matches("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Please enter a 10 digit phone number. Number format is ###-###-####", "Phone | Mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPhone.setText("");
+                    txtPhone.grabFocus();
+                }
+                else
                 {
                     try {
                         Socket socketCusRegistration = new Socket("localHost", 8000);

@@ -28,8 +28,8 @@ private JButton tbBtnExit;
 
 private void initComponents() {
 home = new JMenu("Home");
-updateItems = new JMenu("Update");
-updateDetails = new JMenu("Update Item");
+updateItems = new JMenu("Update Items");
+updateDetails = new JMenu("Update");
 logout = new JMenu("Exit");
 
 gotoHome = new JMenuItem("Go to Home");

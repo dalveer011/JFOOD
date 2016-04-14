@@ -109,7 +109,7 @@ public class RestaurantRegistration extends JFrame {
     
         lblId = new JLabel ("Enter Login Name*");
         lblPassword = new JLabel ("Enter Password*");
-        lblName = new JLabel ("Enter Resraurant's Name*");
+        lblName = new JLabel ("Enter Restaurant's Name*");
         lblStreetName = new JLabel ("Enter Street Address*");
         lblCity = new JLabel ("Enter City*");
         lblProvince = new JLabel ("Enter Province*");
@@ -179,7 +179,7 @@ public class RestaurantRegistration extends JFrame {
                 String streetAdd = txtStreetName.getText();
                 String city = cmbCity.getSelectedItem().toString();
                 String province = (String)comboBoxProvince.getSelectedItem();
-                String postalCode = txtPostalCode.getText();
+                String postalCode = txtPostalCode.getText().toUpperCase();
                 String email = txtEmail.getText();
                 String phone = txtPhone.getText();
                 String secQues1 = (String) comboBoxSq1.getSelectedItem();
@@ -191,6 +191,29 @@ public class RestaurantRegistration extends JFrame {
                         ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty())
                 { 
                     JOptionPane.showMessageDialog(null, "Fields Marked as * can not be left Blank","Can not be Empty", JOptionPane.ERROR_MESSAGE);
+                }else if (loginId.length()>20)
+                {
+                    JOptionPane.showMessageDialog(null, "Login Name cannot exceed 20 characters"," Login Name | Over limit", JOptionPane.ERROR_MESSAGE);
+                    txtId.setText("");
+                    txtId.grabFocus();
+                }else if (pass.length()>20)
+                {
+                    JOptionPane.showMessageDialog(null, "Password cannot exceed 20 characters"," Login Name | Over limit", JOptionPane.ERROR_MESSAGE);
+                    txtPassword.setText("");
+                    txtPassword.grabFocus();
+                }else if (!postalCode.matches("^(([A-Za-z][0-9]){3})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Postal Code format must be a#a#a#"," Postal Code | Format mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPostalCode.setText("");
+                    txtPostalCode.grabFocus();
+                }else if (city.equals("Select City") || province.equals("Select Province"))
+                {
+                    JOptionPane.showMessageDialog(null, "Province and City must be selected "," Province & City | Must be Selected", JOptionPane.ERROR_MESSAGE);
+                }else if (!phone.matches("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Please enter a 10 digit phone number. Number format is ###-###-####", "Phone | Mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPhone.setText("");
+                    txtPhone.grabFocus();
                 }
                 else
                 {   

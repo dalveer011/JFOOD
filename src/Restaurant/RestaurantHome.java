@@ -35,7 +35,8 @@ this.restId = restId;
 this.initComponents();
 this.setTitle("Home Page : Restaurant | " + LoginForm.restaurantOwner.getName());
 this.setSize(HeaderFooter.WIDTH, HeaderFooter.HEIGHT);
-
+this.add(this.getRestaurantToolBar(),BorderLayout.EAST);
+this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 this.add(HeaderFooter.getHeader(new JLabel(new ImageIcon(getClass().getResource("resources/logo2.png")))), BorderLayout.NORTH);
 this.add(HeaderFooter.getFooter(new JLabel(new ImageIcon(getClass().getResource("images/copyright.png")))), BorderLayout.SOUTH);
 this.add(center,BorderLayout.CENTER);
@@ -121,8 +122,7 @@ ResultSet rs = db.getInfo("select count(status) from orders_jfood where status =
             }
         );
 //Adding Tool Bar
-this.add(this.getRestaurantToolBar(),BorderLayout.EAST);
-this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
 
 
         tbBtnAdd.addActionListener

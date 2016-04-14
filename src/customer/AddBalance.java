@@ -181,31 +181,50 @@ public class AddBalance extends MenuCustomer {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
+                String customerId,balance, amt, cardInfo, expiry, ccv;
                 db = new DBConnection();
                 
-                String customerId = txtId.getText();
-                String balance = txtCurBalance.getText();
-                String amt = txtAddAmount.getText();
-                String cardInfo = txtCard.getText();
-                String expiry = txtExpiry.getText();
-                String ccv = txtCCV.getText();
+                customerId = txtId.getText();
+                balance = txtCurBalance.getText();
+                amt = txtAddAmount.getText();
+                cardInfo = txtCard.getText();
+                expiry = txtExpiry.getText();
+                ccv = txtCCV.getText();
                 
-                double b = Double.parseDouble(balance);
-                double a = Double.parseDouble(amt);
-                double c = b + a;
-                double addAmt = c;
-                
-                
-                
-                db.UpdateCreditCardBalance(customerId, addAmt, cardInfo, expiry, ccv);
-                
-                JOptionPane.showMessageDialog(null,"Updated","Customer Wallet Updated",JOptionPane.INFORMATION_MESSAGE);
-                db.closeConnection();
-                ThankUForAddingBalance tu = new ThankUForAddingBalance(id);
-                AddBalance.this.dispose();
-            }
-                   
-            });
+                if (amt.trim().isEmpty() || cardInfo.trim().isEmpty() || expiry.trim().isEmpty() || ccv.trim().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Fields marked with * cannot be empty" , "Empty Fields", JOptionPane.ERROR_MESSAGE);
+                }else if (!cardInfo.matches("^([4-5][0-9]{3}\\-[0-9]{4}\\-[0-9]{4}\\-[0-9]{4})$")) 
+                {
+                    JOptionPane.showMessageDialog(null, "Credit Card must start with 4 or 5 and must be in 4|5###-####-####-#### format" , "Credit Card | Format mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtCard.setText("");
+                    txtCard.grabFocus();
+                }else if (!expiry.matches("^(0[1-9]|1[0-2])\\/[0-9]{2}$")) 
+                {
+                    JOptionPane.showMessageDialog(null, "Expiry date should match MM/YY" , "Expiry | Format mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtExpiry.setText("");
+                    txtExpiry.grabFocus();
+                }else if (!ccv.matches("^([0-9]{3})$")) 
+                {
+                    JOptionPane.showMessageDialog(null, "CCV should match ###" , "CCV | Format mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtCCV.setText("");
+                    txtCCV.grabFocus();
+                }else {
+                    double b = Double.parseDouble(balance);
+                    double a = Double.parseDouble(amt);
+                    double c = b + a;
+                    double addAmt = c;
+
+
+
+                    db.UpdateCreditCardBalance(customerId, addAmt, cardInfo, expiry, ccv);
+
+                    JOptionPane.showMessageDialog(null,"Updated","Customer Wallet Updated",JOptionPane.INFORMATION_MESSAGE);
+                    db.closeConnection();
+                    ThankUForAddingBalance tu = new ThankUForAddingBalance(id);
+                    AddBalance.this.dispose();
+                }               
+        }               
+    });
         
         //ActionListener for exit button!
         btnExit.addActionListener(new ActionListener() {

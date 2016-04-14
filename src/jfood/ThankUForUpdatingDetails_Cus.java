@@ -14,14 +14,14 @@ import java.awt.*;
  *
  * @author Mazhar
  */
-public class ThankUForUpdatingDetails extends JFrame {
+public class ThankUForUpdatingDetails_Cus extends JFrame {
     private JLabel lblThanks,img;
     private JButton btnContinue, btnExit;
     private JPanel panelCenterInside1, panelCenterInside2, panelCenterInside3,
             panelCenter;
     private String id;
     
-    public ThankUForUpdatingDetails (String  id){
+    public ThankUForUpdatingDetails_Cus (String  id){
         this.id = id;
         this.initComponents();
         this.setTitle("Thank you for the update");
@@ -64,13 +64,12 @@ public class ThankUForUpdatingDetails extends JFrame {
         });
         
         btnContinue.addActionListener
-        (
-            new ActionListener () {
+        (new ActionListener () {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 HomeCustomer h3 = new HomeCustomer (id);
-                ThankUForUpdatingDetails.this.dispose();
+                ThankUForUpdatingDetails_Cus.this.dispose();
             }
         });
        

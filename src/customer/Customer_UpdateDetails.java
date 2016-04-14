@@ -16,7 +16,7 @@ import database.DBConnection;
 import jfood.HeaderFooter;
 import jfood.LogOut;
 import loginAndRegistration.LoginForm;
-import jfood.ThankUForUpdatingDetails;
+import jfood.ThankUForUpdatingDetails_Cus;
 
 public class Customer_UpdateDetails extends MenuCustomer {
     //Declaration for Main Frame! 
@@ -241,9 +241,29 @@ public class Customer_UpdateDetails extends MenuCustomer {
                 String ans2 = txtAns2.getText();
                 if(password.trim().isEmpty() ||fName.trim().isEmpty() ||lName.trim().isEmpty() ||streetAdd.trim().isEmpty() ||
                         city.trim().isEmpty() ||province.trim().isEmpty() ||postalCode.trim().isEmpty() ||email.trim().isEmpty() ||
-                        phone.trim().isEmpty() ||ans1.trim().isEmpty() ||ans2.trim().isEmpty() )
-                     JOptionPane.showMessageDialog(null,"All fields here are Mandatory","Fields Empty",JOptionPane.ERROR_MESSAGE);
-                else 
+                        phone.trim().isEmpty() ||ans1.trim().isEmpty() ||ans2.trim().isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null,"All fields here are Mandatory","Fields Empty",JOptionPane.ERROR_MESSAGE);
+                }
+                else if (password.length()>20)
+                {
+                    JOptionPane.showMessageDialog(null, "Password cannot exceed 20 characters"," Login Name | Over limit", JOptionPane.ERROR_MESSAGE);
+                    txtPass.setText("");
+                    txtPass.grabFocus();
+                }else if (!postalCode.matches("^(([A-Za-z][0-9]){3})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Postal Code format must be a#a#a#"," Postal Code | Format mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPostalCode.setText("");
+                    txtPostalCode.grabFocus();
+                }else if (city.equals("Select City") || province.equals("Select Province"))
+                {
+                    JOptionPane.showMessageDialog(null, "Province and City must be selected "," Province & City | Must be Selected", JOptionPane.ERROR_MESSAGE);
+                }else if (!phone.matches("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})$"))
+                {
+                    JOptionPane.showMessageDialog(null, "Please enter a 10 digit phone number. Number format is ###-###-####", "Phone | Mismatch", JOptionPane.ERROR_MESSAGE);
+                    txtPhone.setText("");
+                    txtPhone.grabFocus();
+                }else 
                 {
                     LoginForm.customer.setPassword(password);
                     LoginForm.customer.setFirstName(fName);
@@ -260,7 +280,7 @@ public class Customer_UpdateDetails extends MenuCustomer {
                     System.out.println(password);
                     System.out.println(email);
                     db.closeConnection();
-                    new ThankUForUpdatingDetails(id);
+                    new ThankUForUpdatingDetails_Cus(id);
                     Customer_UpdateDetails.this.dispose();
             }             
         }
