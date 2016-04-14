@@ -69,7 +69,7 @@ public class UpdateItems extends RestaurantMenuBar{
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-               String restid = txtRestId.getText();
+                String restid = txtRestId.getText();
                 String itemnum = txtItemNum.getText().toUpperCase();
                 String itemDesc = txtItemDesc.getText();
                 String price = txtPriceNew.getText();
@@ -92,7 +92,7 @@ public class UpdateItems extends RestaurantMenuBar{
                         DataInputStream dataFromServer = new DataInputStream(socketUpdateitems.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream (socketUpdateitems.getOutputStream());
                         
-                        dataToServer.writeInt(9);
+                        dataToServer.writeInt(9); // Process Id for Updating item.
                         dataToServer.writeUTF(itemnum);
                         dataToServer.writeUTF(restid);
                         dataToServer.writeUTF(cat);

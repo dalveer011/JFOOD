@@ -10,6 +10,12 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.DBConnection;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
 import loginAndRegistration.LoginForm;
@@ -151,23 +157,23 @@ public class AddBalance extends MenuCustomer {
         txtCurBalance.setPreferredSize(new Dimension (250, 30));
         txtCurBalance.setEditable(false);
         
-        db = new DBConnection();
-        rs = db.getInfo(query);
-        
         try {
-            while (rs.next()){
-                if (id.equals(rs.getString(1))){
-                    txtCurBalance.setText(rs.getString(2));
-                    txtCard.setText(rs.getString(3));
-                    txtExpiry.setText(rs.getString(4));
-                    txtCCV.setText(rs.getString(5));
-                }
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Add Balance", JOptionPane.ERROR_MESSAGE);
+            Socket socketGetCard = new Socket ("localHost", 8000);
+            DataInputStream dataFromServer = new DataInputStream(socketGetCard.getInputStream());
+            DataOutputStream dataToServer = new DataOutputStream (socketGetCard.getOutputStream());
+
+            dataToServer.writeInt(14); //Process Id for getting Sq Answers from Security_Answers Table
+            dataToServer.writeUTF(id);
+            
+            txtCurBalance.setText(dataFromServer.readUTF());
+            txtCard.setText(dataFromServer.readUTF());
+            txtExpiry.setText(dataFromServer.readUTF());
+            txtCCV.setText(dataFromServer.readUTF());
+            
+            socketGetCard.close();
+        } catch (IOException ex) {
+            Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        db.closeConnection();
         
         //Creating the buttons
         btnAdd = new JButton ("Add");
@@ -214,14 +220,32 @@ public class AddBalance extends MenuCustomer {
                     double c = b + a;
                     double addAmt = c;
 
+                    try {
+                        Socket socketUpdateCreditCardInfo = new Socket ("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(socketUpdateCreditCardInfo.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream (socketUpdateCreditCardInfo.getOutputStream());
 
-
-                    db.UpdateCreditCardBalance(customerId, addAmt, cardInfo, expiry, ccv);
-
-                    JOptionPane.showMessageDialog(null,"Updated","Customer Wallet Updated",JOptionPane.INFORMATION_MESSAGE);
-                    db.closeConnection();
-                    ThankUForAddingBalance tu = new ThankUForAddingBalance(id);
-                    AddBalance.this.dispose();
+                        dataToServer.writeInt(15);
+                        dataToServer.writeUTF(customerId);
+                        dataToServer.writeDouble(addAmt);
+                        dataToServer.writeUTF(cardInfo);
+                        dataToServer.writeUTF(expiry);
+                        dataToServer.writeUTF(ccv);
+                        
+                        boolean checkCusUpdated = dataFromServer.readBoolean();
+                        
+                        if (checkCusUpdated)
+                        {
+                            JOptionPane.showMessageDialog(null,"Updated","Customer Wallet Updated",JOptionPane.INFORMATION_MESSAGE);
+                            ThankUForAddingBalance tu = new ThankUForAddingBalance(id);
+                            AddBalance.this.dispose();
+                        }else
+                        {
+                            JOptionPane.showMessageDialog(null,"Update Failed","Update Unsuccessful",JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(AddBalance.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }               
         }               
     });

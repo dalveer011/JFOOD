@@ -257,7 +257,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
             DataInputStream dataFromServer = new DataInputStream(socketGetRestaurantDetails.getInputStream());
             DataOutputStream dataToServer = new DataOutputStream (socketGetRestaurantDetails.getOutputStream());
 
-            dataToServer.writeInt(11);
+            dataToServer.writeInt(11); //Process Id for getting Sq Answers from Security_Answers Table
             dataToServer.writeUTF(id);
             ans1 = dataFromServer.readUTF();
             ans2 = dataFromServer.readUTF(); 
@@ -270,7 +270,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
         comboBoxSq2 = new JComboBox(sq2);
         comboBoxProvince = new JComboBox();
         comboBoxCity = new JComboBox();
-       //populating state combo box
+        //populating state combo box
          try {
             db = new DBConnection();
             System.out.println("hello");

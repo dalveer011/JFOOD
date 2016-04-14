@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package customer;
+import Restaurant.UpdateRestaurantDetails;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,10 @@ import java.io.DataOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.DBConnection;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
 import loginAndRegistration.LoginForm;
@@ -60,6 +65,8 @@ public class Customer_UpdateDetails extends MenuCustomer {
     private DBConnection db = null;
     private ResultSet rs = null;
     private String querySecQuestions = "SELECT LOGINID, SECURITY_QUESTION1, ANSWER_1, SECURITY_QUESTION2, ANSWER_2 FROM SECURITY_QUESTIONS_JFOOD";
+    private String ans1;
+    private String ans2;
 
     
     public Customer_UpdateDetails (final String id){
@@ -176,15 +183,13 @@ public class Customer_UpdateDetails extends MenuCustomer {
         lblSq1 = new JLabel ("Security Question 1");
         lblSq2 = new JLabel ("Security Question 2");
         lblAns1 = new JLabel ("Answer*");
-        lblAns2 = new JLabel ("Answer*");
-        
+        lblAns2 = new JLabel ("Answer*");      
         
         comboBoxSq1 = new JComboBox(sq1);
         comboBoxSq2 = new JComboBox(sq2);
         
         txtAns1 = new JTextField ();
         txtAns2 = new JTextField ();
-        
         
         txtId = new JTextField(id);
         txtId.setPreferredSize(new Dimension (280, 28));
@@ -203,20 +208,22 @@ public class Customer_UpdateDetails extends MenuCustomer {
         txtPhone = new JTextField (LoginForm.customer.getPhone());
         txtEmail = new JTextField (LoginForm.customer.getEmail());
         
-        
-        db = new DBConnection();
-        rs = db.getInfo(querySecQuestions);
-        
         try {
-            while (rs.next()){
-                if (txtId.getText().equals(rs.getString(1))){
-                    txtAns1.setText(rs.getString(3));
-                    txtAns2.setText(rs.getString(5));
-                }
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "SQL Exception | Customer_UpdateDetails", JOptionPane.ERROR_MESSAGE);
+            Socket socketGetCustomerDetails = new Socket("localHost", 8000);
+            DataInputStream dataFromServer = new DataInputStream(socketGetCustomerDetails.getInputStream());
+            DataOutputStream dataToServer = new DataOutputStream (socketGetCustomerDetails.getOutputStream());
+
+            dataToServer.writeInt(11); //Process Id for getting Sq Answers from Security_Answers Table
+            dataToServer.writeUTF(id);
+            ans1 = dataFromServer.readUTF();
+            ans2 = dataFromServer.readUTF(); 
+            socketGetCustomerDetails.close();
+        } catch (IOException ex) {
+            Logger.getLogger(UpdateRestaurantDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        txtAns1.setText(ans1);
+        txtAns2.setText(ans2);
         
         //Update button! 
         btnUpdate = new JButton ("Update");
@@ -225,7 +232,6 @@ public class Customer_UpdateDetails extends MenuCustomer {
         @Override
         public void actionPerformed(ActionEvent e) 
         {
-                
                 String password = txtPass.getText();
                 String fName = txtFirstName.getText();
                 String lName = txtLastName.getText();
@@ -236,12 +242,12 @@ public class Customer_UpdateDetails extends MenuCustomer {
                 String email = txtEmail.getText();
                 String phone = txtPhone.getText();
                 String sq1 = (String) comboBoxSq1.getSelectedItem();
-                String ans1 = txtAns1.getText();
+                String updatedAns1 = txtAns1.getText();
                 String sq2 = (String) comboBoxSq2.getSelectedItem();;
-                String ans2 = txtAns2.getText();
+                String updatedAns2 = txtAns2.getText();
                 if(password.trim().isEmpty() ||fName.trim().isEmpty() ||lName.trim().isEmpty() ||streetAdd.trim().isEmpty() ||
                         city.trim().isEmpty() ||province.trim().isEmpty() ||postalCode.trim().isEmpty() ||email.trim().isEmpty() ||
-                        phone.trim().isEmpty() ||ans1.trim().isEmpty() ||ans2.trim().isEmpty())
+                        phone.trim().isEmpty() ||updatedAns1.trim().isEmpty() ||updatedAns2.trim().isEmpty())
                 {
                     JOptionPane.showMessageDialog(null,"All fields here are Mandatory","Fields Empty",JOptionPane.ERROR_MESSAGE);
                 }
@@ -274,14 +280,51 @@ public class Customer_UpdateDetails extends MenuCustomer {
                     LoginForm.customer.setPostalCode(postalCode);
                     LoginForm.customer.setEmail(email);
                     LoginForm.customer.setPhone(phone);
-                    db.UpdateCustomerInfo(id, password, fName, lName, streetAdd, city, province, postalCode, email, phone);
-                    db.UpdateSecurityInfo(id, password, sq1, ans1, sq2, ans2);
-                    System.out.println("Update Complete");
-                    System.out.println(password);
-                    System.out.println(email);
-                    db.closeConnection();
-                    new ThankUForUpdatingDetails_Cus(id);
-                    Customer_UpdateDetails.this.dispose();
+                    
+                    Socket updateCustomerInfo;
+                    try {
+                        updateCustomerInfo = new Socket ("localHost", 8000);
+                        DataInputStream dataFromServer = new DataInputStream(updateCustomerInfo.getInputStream());
+                        DataOutputStream dataToServer = new DataOutputStream (updateCustomerInfo.getOutputStream());
+
+                        dataToServer.writeInt(13); //ProcessId for Updating Customer Information
+
+                        dataToServer.writeUTF(id);
+                        dataToServer.writeUTF(password);
+                        dataToServer.writeUTF(fName);
+                        dataToServer.writeUTF(lName);
+                        dataToServer.writeUTF(streetAdd);
+                        dataToServer.writeUTF(city);
+                        dataToServer.writeUTF(province);
+                        dataToServer.writeUTF(postalCode);
+                        dataToServer.writeUTF(email);
+                        dataToServer.writeUTF(phone);
+                        dataToServer.writeUTF(sq1);
+                        dataToServer.writeUTF(updatedAns1);
+                        dataToServer.writeUTF(sq2);
+                        dataToServer.writeUTF(updatedAns2);
+
+                        boolean checkCustomerUpdated = dataFromServer.readBoolean();
+                        
+                        if (checkCustomerUpdated)
+                        {
+                            JOptionPane.showMessageDialog(null, "Customer's information is updated", "Update successful" , JOptionPane.INFORMATION_MESSAGE);
+                            new ThankUForUpdatingDetails_Cus(LoginForm.customer.getLoginId());
+                            Customer_UpdateDetails.this.dispose();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Customer's information couldn't updated", "Information update unsuccessful" , JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        
+                        } catch (IOException ex) {
+                            Logger.getLogger(Customer_UpdateDetails.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+//                    db.UpdateCustomerInfo(id, password, fName, lName, streetAdd, city, province, postalCode, email, phone);
+//                    db.UpdateSecurityInfo(id, password, sq1, updatedAns1, sq2, updatedAns2);
+//                    System.out.println("Update Complete");
+//                    System.out.println(password);
+//                    System.out.println(email);
+//                    db.closeConnection();        
             }             
         }
     });
