@@ -36,6 +36,7 @@ import database.DBConnection;
 import java.net.Socket;
 import jfood.HeaderFooter;
 import jfood.LogOut;
+import jfood.ProcessID;
 
 public class UpdateItems extends RestaurantMenuBar{
     
@@ -92,7 +93,7 @@ public class UpdateItems extends RestaurantMenuBar{
                         DataInputStream dataFromServer = new DataInputStream(socketUpdateitems.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream (socketUpdateitems.getOutputStream());
                         
-                        dataToServer.writeInt(9); // Process Id for Updating item.
+                        dataToServer.writeInt(ProcessID.UPDATE_ITEM_RESTAURANT); // Process Id for Updating item.
                         dataToServer.writeUTF(itemnum);
                         dataToServer.writeUTF(restid);
                         dataToServer.writeUTF(cat);

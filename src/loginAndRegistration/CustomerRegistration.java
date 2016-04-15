@@ -22,6 +22,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jfood.HeaderFooter;
+import jfood.ProcessID;
 import jfood.WelcomeScreen;
 /**
  *
@@ -179,7 +180,7 @@ public class CustomerRegistration extends JFrame {
                 String streetAdd = txtStreetName.getText();
                 String city = cmbCity.getSelectedItem().toString();
                 String province = (String)comboBoxProvince.getSelectedItem();
-                String postalCode = txtPostalCode.getText();
+                String postalCode = txtPostalCode.getText().toUpperCase();
                 String email = txtEmail.getText();
                 String phone = txtPhone.getText();
                 String secQues1 = (String) comboBoxSq1.getSelectedItem();
@@ -223,7 +224,7 @@ public class CustomerRegistration extends JFrame {
                         DataInputStream dataFromServer = new DataInputStream(socketCusRegistration.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream(socketCusRegistration.getOutputStream());
                         
-                        dataToServer.writeInt(2); //Process Id for Customer Registration!
+                        dataToServer.writeInt(ProcessID.CUSTOMER_REGISTRATION); //Process Id for Customer Registration!
                         dataToServer.writeUTF(loginId);
                         dataToServer.writeUTF(pass);
                         dataToServer.writeUTF(role);

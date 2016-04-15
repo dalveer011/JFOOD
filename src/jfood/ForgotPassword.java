@@ -68,32 +68,14 @@ public class ForgotPassword extends JFrame {
         
         txtEnterId.setText(id);
         txtEnterId.setEditable(false);
-        
-//        db = new DBConnection();
-//        rs = db.getInfo(query);
-//
-//        
-//        try {
-//            while (rs.next()){
-//                if (id.equals(rs.getString(1))){
-//                    txtQues1.setText(rs.getString(3));
-//                    txtQues2.setText(rs.getString(5));
-//                    password = rs.getString(2);
-//                    
-//                    ans1 = rs.getString(4);
-//                    ans2 = rs.getString(6);
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ForgotPassword.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
         
             try {
             Socket socketfbPassScreen = new Socket ("localHost", 8000);
             DataInputStream dataFromServer = new DataInputStream(socketfbPassScreen.getInputStream());
             DataOutputStream dataToServer = new DataOutputStream (socketfbPassScreen.getOutputStream());
             
-            dataToServer.writeInt(7); //Process Id for Retreiving secQues1 and answes along with passwrd | Forgot Password Screen
+            dataToServer.writeInt(ProcessID.GET_PASSWORD_SECURITY_ANSWERS_FGPASS); //Process Id for Retreiving secQues1 and answes along with passwrd | Forgot Password Screen
             
             System.out.println(id);
             dataToServer.writeUTF(id);

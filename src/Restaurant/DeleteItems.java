@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
+import jfood.ProcessID;
 
 public class DeleteItems extends RestaurantMenuBar {
     
@@ -87,7 +88,7 @@ public class DeleteItems extends RestaurantMenuBar {
                         DataInputStream dataFromServer = new DataInputStream(socketDeleteitems.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream (socketDeleteitems.getOutputStream());
                         
-                        dataToServer.writeInt(10);
+                        dataToServer.writeInt(ProcessID.DELETE_ITEM_RESTAURANT);
                         dataToServer.writeUTF(rid);
                         dataToServer.writeUTF(inum);
                         dataToServer.writeUTF(icat);

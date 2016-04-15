@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
+import jfood.ProcessID;
 import loginAndRegistration.LoginForm;
 
 /**
@@ -162,7 +163,7 @@ public class AddBalance extends MenuCustomer {
             DataInputStream dataFromServer = new DataInputStream(socketGetCard.getInputStream());
             DataOutputStream dataToServer = new DataOutputStream (socketGetCard.getOutputStream());
 
-            dataToServer.writeInt(14); //Process Id for getting Sq Answers from Security_Answers Table
+            dataToServer.writeInt(ProcessID.GET_CREDIT_CARD_DETAILS); //Process Id for getting Sq Answers from Security_Answers Table
             dataToServer.writeUTF(id);
             
             txtCurBalance.setText(dataFromServer.readUTF());
@@ -225,7 +226,7 @@ public class AddBalance extends MenuCustomer {
                         DataInputStream dataFromServer = new DataInputStream(socketUpdateCreditCardInfo.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream (socketUpdateCreditCardInfo.getOutputStream());
 
-                        dataToServer.writeInt(15);
+                        dataToServer.writeInt(ProcessID.UPDATE_CREDITCARD_DETAILS);
                         dataToServer.writeUTF(customerId);
                         dataToServer.writeDouble(addAmt);
                         dataToServer.writeUTF(cardInfo);

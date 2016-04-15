@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import jfood.HeaderFooter;
 import jfood.LogOut;
+import jfood.ProcessID;
 import jfood.ThankUForUpdatingDetails_Cus;
 import loginAndRegistration.LoginForm;
 
@@ -257,7 +258,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
             DataInputStream dataFromServer = new DataInputStream(socketGetRestaurantDetails.getInputStream());
             DataOutputStream dataToServer = new DataOutputStream (socketGetRestaurantDetails.getOutputStream());
 
-            dataToServer.writeInt(11); //Process Id for getting Sq Answers from Security_Answers Table
+            dataToServer.writeInt(ProcessID.GET_SECURITY_ANSWERS); //Process Id for getting Sq Answers from Security_Answers Table
             dataToServer.writeUTF(id);
             ans1 = dataFromServer.readUTF();
             ans2 = dataFromServer.readUTF(); 
@@ -340,7 +341,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                 String streetAdd = txtStreetName.getText();
                 String province = (String)comboBoxProvince.getSelectedItem();
                 String city = (String)comboBoxCity.getSelectedItem();
-                String postalCode = txtPostalCode.getText();
+                String postalCode = txtPostalCode.getText().toUpperCase();
                 String email = txtEmail.getText();
                 String phone = txtPhone.getText();
                 String sq1 = (String) comboBoxSq1.getSelectedItem();
@@ -387,7 +388,7 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
                         DataInputStream dataFromServer = new DataInputStream(updateRstInfo.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream (updateRstInfo.getOutputStream());
 
-                        dataToServer.writeInt(12); //ProcessId for Updating Restaurant Info.
+                        dataToServer.writeInt(ProcessID.UPDATE_RESTAURANT_DETAILS); //ProcessId for Updating Restaurant Info.
                         
                         dataToServer.writeUTF(id);
                         dataToServer.writeUTF(password);

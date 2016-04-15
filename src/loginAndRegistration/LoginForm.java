@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.Socket;
 import jfood.ForgotPassword;
 import jfood.HeaderFooter;
+import jfood.ProcessID;
 import jfood.WelcomeScreen;
 
 
@@ -109,7 +110,7 @@ public class LoginForm extends JFrame{
                        
                         String role = (String)comboBoxRole.getSelectedItem();
                         if (role == "Customer"){
-                            dataToServer.writeInt(5); //Forgot password for Customers
+                            dataToServer.writeInt(ProcessID.CUSTOMERID_CHECK_FGPASS); //Forgot password for Customers
                             dataToServer.writeUTF(txtEnterId.getText());
                             
                             boolean checkfgPass_cus = dataFromServer.readBoolean();
@@ -123,7 +124,7 @@ public class LoginForm extends JFrame{
                             
                         }else if (role == "Restaurant Owner")
                         {
-                            dataToServer.writeInt(6); //Forgot password for Restaurant Owners
+                            dataToServer.writeInt(ProcessID.RESTAURANTID_CHECK_FGPASS); //Forgot password for Restaurant Owners
                             dataToServer.writeUTF(txtEnterId.getText());
                             
                             boolean checkfgPass_Rst = dataFromServer.readBoolean();
@@ -179,7 +180,7 @@ public class LoginForm extends JFrame{
                         String role = (String) comboBoxRole.getSelectedItem();
                             if (role == "Customer")
                             {
-                                dataToServer.writeInt(3); //Process Id for Login Check | IF CUSTOMER COMBOBOX WAS CHECKED
+                                dataToServer.writeInt(ProcessID.LOGIN_CHECK_CUSTOMER); //Process Id for Login Check | IF CUSTOMER COMBOBOX WAS CHECKED
                                 dataToServer.writeUTF(entId);
                                 dataToServer.writeUTF(entPass);
                                 boolean logPassCheckCus = dataFromServer.readBoolean();
@@ -202,7 +203,7 @@ public class LoginForm extends JFrame{
                                 }
                             }else if (role == "Restaurant Owner")
                             {
-                                dataToServer.writeInt(4); //Process Id for Login Check | IF RESTAURANT OWNER COMBOBOX WAS CHECKED
+                                dataToServer.writeInt(ProcessID.LOGIN_CHECK_RESTAURANTOWNER); //Process Id for Login Check | IF RESTAURANT OWNER COMBOBOX WAS CHECKED
                                 dataToServer.writeUTF(entId);
                                 dataToServer.writeUTF(entPass);
                                 boolean logPassCheckRst = dataFromServer.readBoolean();

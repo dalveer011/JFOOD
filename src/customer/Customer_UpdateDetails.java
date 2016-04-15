@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
+import jfood.ProcessID;
 import loginAndRegistration.LoginForm;
 import jfood.ThankUForUpdatingDetails_Cus;
 
@@ -213,7 +214,7 @@ public class Customer_UpdateDetails extends MenuCustomer {
             DataInputStream dataFromServer = new DataInputStream(socketGetCustomerDetails.getInputStream());
             DataOutputStream dataToServer = new DataOutputStream (socketGetCustomerDetails.getOutputStream());
 
-            dataToServer.writeInt(11); //Process Id for getting Sq Answers from Security_Answers Table
+            dataToServer.writeInt(ProcessID.GET_SECURITY_ANSWERS); //Process Id for getting Sq Answers from Security_Answers Table
             dataToServer.writeUTF(id);
             ans1 = dataFromServer.readUTF();
             ans2 = dataFromServer.readUTF(); 
@@ -238,7 +239,7 @@ public class Customer_UpdateDetails extends MenuCustomer {
                 String streetAdd = txtStreetName.getText();
                 String city = txtCity.getText();
                 String province = txtProvince.getText();
-                String postalCode = txtPostalCode.getText();
+                String postalCode = txtPostalCode.getText().toUpperCase();
                 String email = txtEmail.getText();
                 String phone = txtPhone.getText();
                 String sq1 = (String) comboBoxSq1.getSelectedItem();
@@ -287,7 +288,7 @@ public class Customer_UpdateDetails extends MenuCustomer {
                         DataInputStream dataFromServer = new DataInputStream(updateCustomerInfo.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream (updateCustomerInfo.getOutputStream());
 
-                        dataToServer.writeInt(13); //ProcessId for Updating Customer Information
+                        dataToServer.writeInt(ProcessID.UPDATE_CUSTOMER_DETAILS); //ProcessId for Updating Customer Information
 
                         dataToServer.writeUTF(id);
                         dataToServer.writeUTF(password);

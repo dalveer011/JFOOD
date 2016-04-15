@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jfood.HeaderFooter;
 import jfood.LogOut;
+import jfood.ProcessID;
 
 public class AddNewItems extends RestaurantMenuBar{
     
@@ -82,7 +83,7 @@ public class AddNewItems extends RestaurantMenuBar{
                         DataInputStream dataFromServer = new DataInputStream(socketAdditems.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream (socketAdditems.getOutputStream());
                         
-                        dataToServer.writeInt(8);
+                        dataToServer.writeInt(ProcessID.ADD_NEW_ITEM_RESTAURANT);
                         dataToServer.writeUTF(itemnum);
                         dataToServer.writeUTF(restid);
                         dataToServer.writeUTF(cat);

@@ -23,6 +23,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import jfood.HeaderFooter;
+import jfood.ProcessID;
 import jfood.WelcomeScreen;
 /**
  *
@@ -222,7 +223,7 @@ public class RestaurantRegistration extends JFrame {
                         DataInputStream dataFromServer = new DataInputStream(socketRstRegistration.getInputStream());
                         DataOutputStream dataToServer = new DataOutputStream(socketRstRegistration.getOutputStream());
                         
-                        dataToServer.writeInt(1); //Process Id for Restaurant Registration
+                        dataToServer.writeInt(ProcessID.RESTAURANT_REGISTRATION); //Process Id for Restaurant Registration
                         dataToServer.writeUTF(loginId);
                         dataToServer.writeUTF(pass);
                         dataToServer.writeUTF(role);
