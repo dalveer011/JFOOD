@@ -153,6 +153,15 @@ public class UpdateRestaurantDetails extends RestaurantMenuBar {
             }
         );
         
+        updateAcDetails.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UpdateRestaurantDetails a = new UpdateRestaurantDetails(id);
+                UpdateRestaurantDetails.this.dispose();
+            }
+        });
+        
         logOut.addActionListener
         (new ActionListener ()
             {

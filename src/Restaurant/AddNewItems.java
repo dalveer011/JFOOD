@@ -144,6 +144,16 @@ public class AddNewItems extends RestaurantMenuBar{
             }
         );
         
+        updateAcDetails.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UpdateRestaurantDetails a = new UpdateRestaurantDetails(id);
+                AddNewItems.this.dispose();
+            }
+        });
+        
+        
         addItem.addActionListener
         (new ActionListener ()
             {

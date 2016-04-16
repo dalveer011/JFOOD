@@ -146,6 +146,15 @@ public class DeleteItems extends RestaurantMenuBar {
             }
         );
         
+        updateAcDetails.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UpdateRestaurantDetails a = new UpdateRestaurantDetails(id);
+                DeleteItems.this.dispose();
+            }
+        });
+        
         addItem.addActionListener
         (new ActionListener ()
             {

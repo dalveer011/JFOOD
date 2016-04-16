@@ -84,6 +84,14 @@ public RecentOrder(String restauranttId) {
             }                
             }
         );
+        updateAcDetails.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UpdateRestaurantDetails a = new UpdateRestaurantDetails(restId);
+                RecentOrder.this.dispose();
+            }
+        });
         
         updateItem.addActionListener
         (
