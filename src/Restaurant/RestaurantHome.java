@@ -50,11 +50,11 @@ ResultSet rs = db.getInfo("select count(status) from orders_jfood where status =
             int count = rs.getInt(1);
             if(count > 0) 
             {
-                JOptionPane.showMessageDialog(null,"You have "+count+" recent orders","Recent Order",JOptionPane.INFORMATION_MESSAGE);
+                contentBody.setText("You have "+count+" recent orders");
             }
             else
             {
-                JOptionPane.showMessageDialog(null,"You have no recent orders","Recent Order",JOptionPane.INFORMATION_MESSAGE);
+               contentBody.setText("You have no recent order");
             }
         }   
     } catch (SQLException ex) {
@@ -185,14 +185,16 @@ update = new JButton("Update Item Details");
 logout2 = new JButton("Log Out");
 recentOrders = new JButton("Recent Orders");
 image = new JLabel(new ImageIcon(getClass().getResource("images/logo.png")));
-contentBody = new JLabel("Restaurant");
-contentBody.setFont(new Font("Arial", 1, 46));
+contentBody = new JLabel();
+
 
 logo = new JPanel(new FlowLayout());
 logo.add(image);
 
+
 content = new JPanel();
-content.add(contentBody);
+content.add(contentBody,BorderLayout.CENTER);
+
 
 buttons  = new JPanel(new FlowLayout());
 buttons.add(add);

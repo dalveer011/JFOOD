@@ -24,8 +24,8 @@ import javax.swing.SwingConstants;
 public class MenuCustomer extends JFrame {
 
     private JMenuBar mbCustomer;
-    private JMenu menuUpdate, menuHelp, menuLogout, menuFile;
-    protected JMenuItem miAccountDetails, miAddBalance, miHelpContents, miAbout, miExit, miLogout;
+    private JMenu menuUpdate, menuHelp, menuLogout, menuFile,checkOutMenu;
+    protected JMenuItem miAccountDetails, miAddBalance, miHelpContents, miAbout, miExit, miLogout,checkOut;
     
     protected JToolBar myToolBar;
     protected JButton tbBtnExit, tbBtnUpdate, tbBtnAddBalance, tbBtnLogout, tbBtnHome;
@@ -40,7 +40,7 @@ public class MenuCustomer extends JFrame {
         menuHelp = new JMenu ("Help");
         menuLogout = new JMenu ("Log out!");
         menuFile = new JMenu("File");
-        
+       
         // creating the menu items
         miLogout = new JMenuItem("Logout");
         miLogout.setMnemonic('L');
@@ -58,7 +58,12 @@ public class MenuCustomer extends JFrame {
         miExit = new JMenuItem("Exit from Application");
         miExit.setMnemonic('E');
         miExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,Event.CTRL_MASK));
-        
+        checkOutMenu = new JMenu("Check Out");
+        checkOut = new JMenuItem("Check Out");
+        checkOut.setMnemonic('C');
+        checkOut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,Event.CTRL_MASK));
+        checkOutMenu.add(checkOut);
+         mbCustomer.add(checkOutMenu);
         //Adding action listener to the Exit button
         
         miExit.addActionListener(new ActionListener() {
@@ -69,8 +74,7 @@ public class MenuCustomer extends JFrame {
                     "Exit Application", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (n == JOptionPane.YES_OPTION)
                     System.exit(0);
-            else if (n == JOptionPane.NO_OPTION)
-            {}
+           
         }
     });
         

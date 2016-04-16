@@ -56,8 +56,6 @@ public class AddBalance extends MenuCustomer {
     this.add(createMyToolBar(), BorderLayout.EAST);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
-        
-        
         miAccountDetails.addActionListener(new ActionListener() {
 
          @Override

@@ -28,6 +28,10 @@ public class HomeCustomer extends MenuCustomer {
         
         this.id = id;
         this.initComponents();
+        if(LoginForm.customer.getShoppingList().size() > 0 ){
+        cmbState.setEnabled(false);
+        cmbCity.setEnabled(false);
+        }
         this.setSize(HeaderFooter.WIDTH, HeaderFooter.HEIGHT);
         this.setTitle("Home | Welcome to JFood");
         this.setJMenuBar(customerMenu());
@@ -43,6 +47,18 @@ public class HomeCustomer extends MenuCustomer {
         
         
         //Adding actionListeners
+        checkOut.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(LoginForm.customer.getShoppingList().size()==0) {
+                 JOptionPane.showMessageDialog(null,"No item choosen", "Choose an item", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                new CheckOut(LoginForm.customer.getShoppingList(), id, rstId);
+                HomeCustomer.this.dispose();
+                }
+            }
+        });
         cmbState.addItemListener(new ItemListener() {
 
             @Override
@@ -73,6 +89,9 @@ public class HomeCustomer extends MenuCustomer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 conn = new DBConnection(); 
+                if((cmbState.getSelectedItem().toString()).equals("Select State")){
+                    JOptionPane.showMessageDialog(null, "No state selected please select state","Select state",JOptionPane.INFORMATION_MESSAGE);
+                }else{
                 rs = conn.getInfo("select restaurantId,Name from RestaurantOwners_Jfood  where province = '"+cmbState.getSelectedItem()+"' and city = '"+cmbCity.getSelectedItem()+"'");
                 try {
                 int count = 0 ;
@@ -98,9 +117,11 @@ public class HomeCustomer extends MenuCustomer {
            if(count==0) {
            JOptionPane.showMessageDialog(null,"sorry! no restaurant in selected state and city", "SORRY", JOptionPane.INFORMATION_MESSAGE);
            }
+                
                 }
                  catch (SQLException ex) {
                     System.out.println("Error in abtList action listener");
+                }
                 }
             }
         });
