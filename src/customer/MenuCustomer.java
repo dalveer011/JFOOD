@@ -60,10 +60,7 @@ public class MenuCustomer extends JFrame {
         miExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,Event.CTRL_MASK));
         checkOutMenu = new JMenu("Check Out");
         checkOut = new JMenuItem("Check Out");
-        checkOut.setMnemonic('C');
-        checkOut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,Event.CTRL_MASK));
-        checkOutMenu.add(checkOut);
-         mbCustomer.add(checkOutMenu);
+        
         //Adding action listener to the Exit button
         
         miExit.addActionListener(new ActionListener() {
@@ -93,7 +90,10 @@ public class MenuCustomer extends JFrame {
         mbCustomer.add(menuUpdate);
         mbCustomer.add(menuHelp);
         mbCustomer.add(menuLogout);
-        
+        checkOut.setMnemonic('C');
+        checkOut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,Event.CTRL_MASK));
+        checkOutMenu.add(checkOut);
+         mbCustomer.add(checkOutMenu);
         return mbCustomer;
     }
     
@@ -118,10 +118,6 @@ public class MenuCustomer extends JFrame {
             {}
         }
     });
-        
-        
-        
-        
         //Adding buttons to the toolbar
         myToolBar.add(tbBtnExit);
         myToolBar.add(tbBtnUpdate);

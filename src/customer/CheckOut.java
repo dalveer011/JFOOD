@@ -37,7 +37,7 @@ private String cstid,restId;
         this.restId = restId;
         System.out.println(restId);
         System.out.println(cstid);
-     this.setTitle("Customer Update Details");
+     this.setTitle("Check Out  Details");
      this.setVisible(true);
         this.setSize(HeaderFooter.WIDTH, HeaderFooter.HEIGHT);
         //Creating the menubar using MenuCustomer class!
