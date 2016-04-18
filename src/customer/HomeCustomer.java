@@ -88,6 +88,7 @@ public class HomeCustomer extends MenuCustomer {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                panelCenterBottom.removeAll();
                 conn = new DBConnection(); 
                 if((cmbState.getSelectedItem().toString()).equals("Select State")){
                     JOptionPane.showMessageDialog(null, "No state selected please select state","Select state",JOptionPane.INFORMATION_MESSAGE);
