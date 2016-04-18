@@ -188,7 +188,7 @@ public class RestaurantRegistration extends JFrame {
                 String secQues2 = (String) comboBoxSq2.getSelectedItem();
                 String ans2 = txtAns2.getText();
                 
-                if(loginId.trim().isEmpty() || pass.trim().isEmpty()||name.trim().isEmpty()||streetAdd.trim().isEmpty()
+                if(loginId.trim().isEmpty() || pass.trim().isEmpty()||name.trim().isEmpty()||streetAdd.trim().isEmpty() || email.trim().isEmpty()
                         ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty())
                 { 
                     JOptionPane.showMessageDialog(null, "Fields Marked as * can not be left Blank","Can not be Empty", JOptionPane.ERROR_MESSAGE);
@@ -244,6 +244,7 @@ public class RestaurantRegistration extends JFrame {
                         if (checkRegistration){
                             JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
                             LoginForm l1 = new LoginForm();
+                            socketRstRegistration.close();
                             RestaurantRegistration.this.dispose();
                         }else{
                             JOptionPane.showMessageDialog(null, "LoginId already exits. Please use a different Login name.", "Sign Up Unsuccessful", JOptionPane.ERROR_MESSAGE);   

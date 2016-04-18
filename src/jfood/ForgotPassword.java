@@ -86,7 +86,9 @@ public class ForgotPassword extends JFrame {
             String Ques2 = dataFromServer.readUTF();
             ans2 = dataFromServer.readUTF();
             txtQues1.setText(Ques1);
+            txtQues1.setEditable(false);
             txtQues2.setText(Ques2);
+            txtQues2.setEditable(false);
             
             socketfbPassScreen.close();
         } catch (IOException ex) {

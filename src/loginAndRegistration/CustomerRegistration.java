@@ -115,7 +115,7 @@ public class CustomerRegistration extends JFrame {
         lblProvince = new JLabel ("Enter Province*");
         lblPostalCode = new JLabel ("Enter Postal Code*");
         lblPhone = new JLabel ("Enter Phone*");
-        lblEmail = new JLabel ("Enter Email");
+        lblEmail = new JLabel ("Enter Email*");
         lblRole = new JLabel ("Role*");
         lblSq1 = new JLabel ("Security Question 1");
         lblSq2 = new JLabel ("Security Question 2");
@@ -189,7 +189,7 @@ public class CustomerRegistration extends JFrame {
                 String ans2 = txtAns2.getText();
                 
                 if(loginId.trim().isEmpty() || pass.trim().isEmpty()||fName.trim().isEmpty()||lName.trim().isEmpty()||streetAdd.trim().isEmpty()
-                        ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty()){
+                        ||city.trim().isEmpty()||province.trim().isEmpty()||postalCode.trim().isEmpty()||phone.trim().isEmpty()||email.trim().isEmpty()||ans1.trim().isEmpty()||ans2.trim().isEmpty()){
                     
                     JOptionPane.showMessageDialog(null, "Fields Marked as * can not be left Blank","Can not be Empty", JOptionPane.ERROR_MESSAGE);
 
@@ -246,6 +246,7 @@ public class CustomerRegistration extends JFrame {
                         if (checkRegistration){
                             JOptionPane.showMessageDialog(null, "Your Account Has been created. Please login..", "Sign Up Successful", JOptionPane.INFORMATION_MESSAGE);    
                             LoginForm l1 = new LoginForm();
+                            socketCusRegistration.close();
                             CustomerRegistration.this.dispose();
                         }else{
                             JOptionPane.showMessageDialog(null, "LoginId already exits. Please use a different Login name.", "Sign Up Unsuccessful", JOptionPane.ERROR_MESSAGE);   
